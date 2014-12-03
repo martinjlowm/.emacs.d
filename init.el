@@ -23,6 +23,7 @@
 (setq smtpmail-auth-credentials "~/.mailauth.gpg")
 (setq message-citation-line-function 'message-insert-formatted-citation-line)
 (setq message-citation-line-format "\n\nOn %a, %b %d %Y, %f wrote:")
+;; (gnus-demon-add-handler 'gnus-demon-scan-news 2 t)
 (setq gnus-signature-file "~/.signature")
 (setq user-mail-address "martin@martinjlowm.dk")
 
@@ -395,6 +396,7 @@
  '(mm-text-html-renderer (quote gnus-w3m))
  '(neo-banner-message "")
  '(neo-window-width 35)
+ '(neo-header-height 0)
  '(vhdl-project-alist
    (quote
     (("digital_electronics_lab_2" "VHDL laboratory exercise" "~/Documents/02138_digital_electronics_1/projects/lab_2/"

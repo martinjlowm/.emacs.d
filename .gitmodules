@@ -65,7 +65,7 @@
 
 [submodule "emacs-neotree"]
         path = vendor/emacs-neotree
-	url = git@github.com:jaypei/emacs-neotree.git
+	url = git@github.com:martinjlowm/emacs-neotree.git
         branch = master
 
 [submodule "expand-region.el"]
