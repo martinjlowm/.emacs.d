@@ -3,8 +3,29 @@
 (scroll-bar-mode 0)
 (set-fringe-mode 0)
 (setq ring-bell-function 'ignore)
-;; C-x M-f -> follow link erc
+
+;; Mail
+(setq mm-text-html-renderer 'w3m)
+(setq gnus-select-method
+      '(nnimap "gmail"
+	       (nnimap-address "imap.gmail.com")
+	       (nnimap-server-port 993)
+	       (nnimap-stream ssl)))
+
+(setq message-send-mail-function 'smtpmail-send-it
+      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+      smtpmail-auth-credentials '(("smtp.gmail.com" 587
+				   "martin@martinjlowm.dk" nil))
+      smtpmail-default-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 587
+      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
+(setq smtpmail-auth-credentials "~/.mailauth.gpg")
+(setq message-citation-line-function 'message-insert-formatted-citation-line)
+(setq message-citation-line-format "\n\nOn %a, %b %d %Y, %f wrote:")
+(setq gnus-signature-file "~/.signature")
 (setq user-mail-address "martin@martinjlowm.dk")
+
 
 (setq tramp-shell-prompt-pattern "^[^$>\n]*[#$%>] *\\(\[[0-9;]*[a-zA-Z] *\\)*")
 (global-unset-key (kbd "C-z"))
@@ -35,17 +56,20 @@
 
 (load "auctex.el" nil t t)
 (load "preview-latex.el" nil t t)
-(defun  TeX-compile ()
-  "Compiles LaTeX without prompting"
+
+(defun run-arara ()
   (interactive)
-  (TeX-command "LaTeX" 'TeX-master-file))
+  (message (shell-command-to-string (concat "arara " (buffer-file-name)))))
 
-(autoload 'whizzytex-mode "whizzytex" "WhizzyTeX, a minor-mode WYSIWYG environment for LaTeX" t)
 (add-hook 'TeX-mode-hook (lambda ()
-                           (define-key LaTeX-mode-map (kbd "C-c C-c") 'TeX-compile)
-                           (setq TeX-PDF-mode t)))
-
-(add-hook 'doc-view-mode-hook 'auto-revert-mode)
+                           (TeX-PDF-mode t)
+                           (setq TeX-view-program-selection (quote
+                                                             (((output-dvi style-pstricks)
+                                                               "dvips and gv")
+                                                              (output-dvi "xdvi")
+                                                              (output-pdf "xdg-open")
+                                                              (output-html "xdg-open"))))
+                           (define-key LaTeX-mode-map (kbd "C-c C-c") 'run-arara)))
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       backup-by-copying t    ; Don't delink hardlinks
@@ -139,11 +163,6 @@
 (add-to-list 'load-path "~/.emacs.d/vendor/csv-mode")
 (require 'csv-mode)
 
-(add-to-list 'load-path "~/.emacs.d/vendor/ESS/lisp")
-(require 'ess-site)
-
-(load-file "~/.emacs.d/vendor/rudel/rudel-loaddefs.el")
-
 (add-to-list 'load-path "~/.emacs.d/vendor/emacs-calfw")
 (require 'calfw-org)
 (require 'calfw-ical)
@@ -161,11 +180,6 @@
 (global-eclim-mode)
 
 (require 'eclimd)
-
-; Path
-(add-to-list 'load-path "~/.emacs.d/vendor/exec-path-from-shell")
-(require 'exec-path-from-shell)
-(exec-path-from-shell-initialize)
 
 ; Parenthesis!
 (add-to-list 'load-path "~/.emacs.d/vendor/parenthesis")
@@ -192,10 +206,6 @@
 ; Gnuplot
 (autoload 'gnuplot-mode "gnuplot")
 (add-to-list 'auto-mode-alist '("\\.gp\\'" . gnuplot-mode))
-
-;; Matlab mode
-(add-to-list 'load-path "~/.emacs.d/vendor/matlab-emacs")
-(load-library "matlab-load")
 
 ;; C# mode
 (add-to-list 'load-path "~/.emacs.d/vendor/csharp-mode")
@@ -232,14 +242,17 @@
 ; Enable X clipboard
 (setq x-select-enable-clipboard t)
 
+;; Dropdown-list
+(add-to-list 'load-path "~/.emacs.d/vendor/dropdown-list")
+(require 'dropdown-list)
+
 ; YAsnippet
 (add-to-list 'load-path "~/.emacs.d/vendor/yasnippet")
 (require 'yasnippet)
 (yas-global-mode 1)
-(yas/load-directory "~/.emacs.d/snippets")
-(yas/load-directory "~/.emacs.d/vendor/emacs-java/snippets")
-
-
+(setq yas-prompt-functions '(yas-dropdown-prompt
+                             yas-ido-prompt
+                             yas-completing-prompt))
 ;; Autopair
 (add-to-list 'load-path "~/.emacs.d/vendor/autopair")
 (require 'autopair)
@@ -252,18 +265,11 @@
 (require 'sage-mode)
 (setq sage-command "/opt/sage/sage")
 
-
-; emacs-java
-(add-to-list 'load-path "~/.emacs.d/vendor/emacs-java")
-(require 'java-mode-plus)
-(require 'java-docs)
-(java-docs "/usr/share/doc/openjdk7-doc")
-
 ;; Zenburn MOTHAFUCKA!
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/zenburn-emacs")
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized-emacs")
-(add-to-list 'load-path "~/.emacs.d/themes/solarized-emacs")
-(load-theme 'zenburn t)
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/zenburn-emacs")
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized-emacs")
+;; (add-to-list 'load-path "~/.emacs.d/themes/solarized-emacs")
+;; (load-theme 'zenburn t)
 
 ; Enable Solarized dark
 (add-to-list 'load-path "~/.emacs.d/themes/solarized-emacs")
@@ -296,12 +302,6 @@
 (require 'magit)
 (add-to-list 'load-path "~/.emacs.d/vendor/magit-clone")
 (require 'magit-clone)
-
-; Dirtree
-(add-to-list 'load-path "~/.emacs.d/vendor/emacs-dirtree")
-(require 'windata)
-(require 'tree-mode)
-(require 'dirtree)
 
 ; Android
 (add-to-list 'load-path "~/.emacs.d/vendor/android")
@@ -392,6 +392,7 @@
  '(matlab-mode-install-path
    (quote
     ("/home/martinjlowm/matlab/toolbox/" "/home/martinjlowm/Dropbox/Kommunikationsteknologi")))
+ '(mm-text-html-renderer (quote gnus-w3m))
  '(neo-banner-message "")
  '(neo-window-width 35)
  '(vhdl-project-alist
@@ -441,4 +442,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(variable-pitch ((t (:family "Droid Sans Mono")))))

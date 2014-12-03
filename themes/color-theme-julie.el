@@ -50,6 +50,7 @@
 ;; colors with +x are lighter, colors with -x are darker
 (defvar julie-fg        "#c6a57b")
 
+(defvar julie-bg-2      "#101010")
 (defvar julie-bg-1      "#151515")
 (defvar julie-bg        "#202020")
 (defvar julie-bg+1      "#303030")
@@ -91,7 +92,7 @@
    `(color-theme-julie
      ;;; color-theme mapping
      ((foreground-color . ,julie-fg)
-      (background-color . ,julie-bg)
+      (background-color . ,julie-bg-1)
       (background-mode . dark)
       (cursor-color . ,julie-orange))
 
@@ -102,10 +103,10 @@
      (julie-error-face ((t (:foreground ,julie-red-1 :weight bold :underline t))))
 
      ;;; custom faces
-     (linum ((t (:foreground "#505050" :background ,julie-bg-1 :weight normal))))
+     (linum ((t (:foreground "#505050" :background ,julie-bg :weight normal))))
      (tooltip ((t (:foreground ,julie-bg :background ,julie-fg))))
-     (fixed-pitch ((t (:family "Anka/Coder" :height 75))))
-     (variable-pitch ((t (:family "Helvetica Neue LT Std"))))
+     (fixed-pitch ((t (:family "Droid Sans Mono" :height 75))))
+     (variable-pitch ((t (:family "Droid Sans Mono"))))
 
      ;;; whitespace
      (whitespace-space ((t (:foreground ,julie-bg+1))))
@@ -135,8 +136,8 @@
       ((t (:foreground ,julie-fg :background ,julie-bg+1
            :box (:line-width 5 :color ,julie-bg+1)))))
      (mode-line-highlight ((t (:inverse-video t))))
-     (mode-line-inactive ((t (:inherit mode-line :background ,julie-bg-1
-                              :box (:line-width 5 :color ,julie-bg-1)))))
+     (mode-line-inactive ((t (:inherit mode-line :background ,julie-bg-2
+                              :box (:line-width 5 :color ,julie-bg-2)))))
      (mode-line-buffer-id ((t (:inherit julie-strong-1-face))))
      (mode-line-inactive
       ((t (:foreground ,julie-green-1  :background ,julie-bg-1))))
@@ -148,7 +149,7 @@
      (region ((t (:background ,julie-magenta))))
      (secondary-selection ((t (:background ,julie-bg+2))))
      (trailing-whitespace ((t (:background ,julie-red))))
-     (vertical-border ((t (:foreground ,julie-bg-1))))
+     (vertical-border ((t (:foreground ,julie-bg))))
 
      ;;; font lock
      (font-lock-builtin-face ((t (:foreground ,julie-blue))))

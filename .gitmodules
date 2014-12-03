@@ -1,0 +1,178 @@
+[submodule "ace-jump-mode"]
+        path = vendor/ace-jump-mode
+        url = git@github.com:winterTTr/ace-jump-mode.git
+        branch = master
+
+[submodule "aggressive-indent-mode"]
+        path = vendor/aggressive-indent-mode
+        url = git@github.com:Bruce-Connor/aggressive-indent-mode.git
+        branch = master
+
+[submodule "auto-complete"]
+        path = vendor/auto-complete
+	url = git@github.com:auto-complete/auto-complete.git
+        branch = master
+
+[submodule "autopair"]
+        path = vendor/autopair
+	url = git://github.com/capitaomorte/autopair.git
+        branch = master
+
+[submodule "calc-inline"]
+        path = vendor/calc-inline
+	url = git://github.com/emacsmirror/calc-inline.git
+        branch = master
+
+[submodule "coffee-mode"]
+        path = vendor/coffee-mode
+	url = git://github.com/defunkt/coffee-mode.git
+        branch = master
+
+[submodule "color-theme"]
+        path = vendor/color-theme
+	url = git@github.com:jwiegley/color-theme.git
+        branch = master
+
+[submodule "csharp-mode"]
+        path = vendor/csharp-mode
+	url = git@github.com:Sectoid/csharp-mode.git
+        branch = master
+
+[submodule "csv-mode"]
+        path = vendor/csv-mode
+	url = git@github.com:emacsmirror/csv-mode.git
+        branch = master
+
+[submodule "dash.el"]
+        path = vendor/dash.el
+	url = git@github.com:magnars/dash.el.git
+        branch = master
+
+[submodule "dired-copy-paste"]
+        path = vendor/dired-copy-paste
+	url = git://github.com/hidaqa/dired-copy-paste.git
+        branch = master
+
+[submodule "doc-mode"]
+        path = vendor/doc-mode
+	url = git://github.com/nschum/doc-mode.git
+        branch = master
+
+[submodule "emacs-calfw"]
+        path = vendor/emacs-calfw
+	url = git@github.com:kiwanami/emacs-calfw.git
+        branch = master
+
+[submodule "emacs-neotree"]
+        path = vendor/emacs-neotree
+	url = git@github.com:jaypei/emacs-neotree.git
+        branch = master
+
+[submodule "expand-region.el"]
+        path = vendor/expand-region.el
+	url = git://github.com/magnars/expand-region.el.git
+        branch = master
+
+[submodule "git-modes"]
+        path = vendor/git-modes
+	url = git@github.com:magit/git-modes.git
+        branch = master
+
+[submodule "js2-mode"]
+        path = vendor/js2-mode
+	url = git://github.com/mooz/js2-mode.git
+        branch = master
+
+[submodule "lua-mode"]
+        path = vendor/lua-mode
+	url = git://github.com/immerrr/lua-mode.git
+        branch = master
+
+[submodule "magit"]
+        path = vendor/magit
+	url = git://github.com/magit/magit.git
+        branch = master
+
+[submodule "markdown-mode"]
+        path = vendor/markdown-mode
+	url = git://github.com/defunkt/markdown-mode.git
+        branch = master
+
+[submodule "mark-multiple.el"]
+        path = vendor/mark-multiple.el
+	url = git://github.com/magnars/mark-multiple.el.git
+        branch = master
+
+[submodule "multiple-cursors.el"]
+        path = vendor/multiple-cursors.el
+	url = https://github.com/magnars/multiple-cursors.el.git
+        branch = master
+
+[submodule "names"]
+        path = vendor/names
+	url = git@github.com:Bruce-Connor/names.git
+        branch = master
+
+[submodule "popup-el"]
+        path = vendor/popup-el
+	url = git://github.com/auto-complete/popup-el.git
+        branch = master
+
+[submodule "rhtml"]
+        path = vendor/rhtml
+	url = git://github.com/eschulte/rhtml.git
+        branch = master
+
+[submodule "scss-mode"]
+        path = vendor/scss-mode
+	url = git://github.com/antonj/scss-mode.git
+	branch = master
+
+[submodule "smex"]
+        path = vendor/smex
+	url = git://github.com/nonsequitur/smex.git
+        branch = master
+
+[submodule "s.el"]
+        path = vendor/s.el
+	url = git@github.com:magnars/s.el.git
+        branch = master
+
+[submodule "smooth-scrolling"]
+        path = vendor/smooth-scrolling
+	url = git://github.com/jbondeson/smooth-scrolling.git
+        branch = master
+
+[submodule "web-mode"]
+        path = vendor/web-mode
+	url = git@github.com:fxbois/web-mode.git
+        branch = master
+
+[submodule "xlsl-mode"]
+        path = vendor/xlsl-mode
+	url = git@github.com:emacsattic/xlsl-mode.git
+        branch = master
+
+[submodule "yaml-mode"]
+        path = vendor/yaml-mode
+	url = git://github.com/yoshiki/yaml-mode.git
+        branch = master
+
+[submodule "yasnippet"]
+        path = vendor/yasnippet
+	url = git://github.com/capitaomorte/yasnippet.git
+        branch = master
+
+[submodule "zenburn-emacs"]
+        path = themes/zenburn-emacs
+	url = git://github.com/bbatsov/zenburn-emacs.git
+        branch = master
+
+[submodule "yasnippets-latex"]
+	path = vendor/yasnippets-latex
+        url = git@github.com:madsdk/yasnippets-latex.git
+        branch = master
+[submodule "dropdown-list"]
+	path = vendor/dropdown-list
+	url = git@github.com:martinjlowm/dropdown-list.git
+        branch = master
