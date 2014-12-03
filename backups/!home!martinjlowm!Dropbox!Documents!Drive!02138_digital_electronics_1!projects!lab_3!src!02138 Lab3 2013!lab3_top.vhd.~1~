@@ -1,0 +1,79 @@
+--------------------------------------------------------------------------------------------------------
+-- Lab 3 for course 02138 Digital Elektronik 1 
+-- Thunderbird Top level for lab 3 day 2 
+--	
+-- Authors: Jesper Lønbæk - s094726, Rasmus Bo Sørensen - s072080
+--
+--------------------------------------------------------------------------------------------------------
+
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity lab3_top is
+	port(	Brake	:	in std_logic;		--	Brake signal in
+			Left	:	in std_logic;		--	Left trun signal in
+			Right	:	in	std_logic;		--	Right trun signal in
+			Hazard	:	in	std_logic;		--	Hazard signal in
+			Res		:	in	std_logic;		-- 	Reset signal in
+			clk50	:	in	std_logic;		--	Clock 50Mhz signal in
+			clkMan	:	in	std_logic;		--	Manual clock signal
+			Sel_Man	:	in	std_logic;		--	Select signal for manual clock
+			L0, L1, L2	:	out	std_logic;	--	Trun left signals
+			R0, R1, R2	:	out	std_logic);	--	Trun right signals
+end lab3_top;
+
+architecture Structure of lab3_top is
+
+	signal clk, B, L, R, H, Reset	:	std_logic;
+
+	component input_synchronizer is
+		port(	clock	:	in	std_logic;
+				Brake	: 	in 	std_logic;
+				Left	: 	in 	std_logic;
+				Right	: 	in 	std_logic;
+				Hazard	: 	in 	std_logic;
+				Res		:	in	std_logic;
+				B		: 	out std_logic;
+				L		: 	out std_logic;
+				R		: 	out std_logic;
+				H		: 	out std_logic;
+				Reset	:	out	std_logic);
+	end component;
+
+	-- Add clock_manager component declaration
+	
+
+	component Thunderbird is
+		port(	B	:	in	std_logic;
+				L	:	in	std_logic;
+				R	:	in	std_logic;
+				H	:	in	std_logic;
+				Reset	:	in	std_logic;
+				Clock	:	in	std_logic;
+				L0,L1,L2		:	out	std_logic;
+				R0,R1,R2		:	out	std_logic);
+	end component;
+
+
+begin 
+
+	input_synchronizer1 : input_synchronizer port map(
+		clock => clk,
+		Brake => Brake,
+		Left => Left,
+		Right => Right,
+		Hazard => Hazard,
+		Res => Res,
+		B => B,
+		L => L,
+		R => R,
+		H => H,
+		Reset => Reset );
+	
+	-- Add instance of clock_manager
+	
+	
+	-- Add instance of Thunderbird
+
+end Structure;
+

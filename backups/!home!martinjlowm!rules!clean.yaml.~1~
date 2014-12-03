@@ -1,0 +1,8 @@
+!config
+
+identifier: remove
+name: Remove
+command: <arara> @{remove}
+arguments:
+- identifier: remove
+  default: <arara> @{isFalse(isEmpty(item), "rm -f ".concat('"').concat(getBasename(file)).concat(".").concat(item).concat('"'))}

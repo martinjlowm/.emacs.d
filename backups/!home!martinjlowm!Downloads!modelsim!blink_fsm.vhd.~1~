@@ -1,0 +1,31 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity Blink_FSM is
+  port (T         : in std_logic;
+        H         : in std_logic;
+        Reset     : in std_logic;
+        Clock     : in std_logic;
+        z0,z1,z2  : out std_logic);
+end Blink_FSM;
+
+architecture lights OF Blink_FSM IS
+  SIGNAL y1,y2,y1_next,y2_next: std_logic;
+begin
+  z0 <= y2 and (not y1);
+  z1 <= y2;
+  z2 <= y1 or y2;
+  y1_next <= T and (not H) and (not y2);
+  y2_next <= (H and y1) or (T and y1) or (H and (not y2));
+
+  state_reg: process(Clock, Reset)
+  begin
+    if Reset = '1' then
+      y1 <= '0';
+      y2 <= '0';
+    elsif rising_edge(Clock) then
+      y1 <= y1_next;
+      y2 <= y2_next;
+    end if;
+  end process;
+end lights;

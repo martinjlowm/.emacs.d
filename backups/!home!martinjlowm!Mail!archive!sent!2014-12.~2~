@@ -1,0 +1,66 @@
+From nobody Wed Dec  3 08:52:54 2014
+From: Martin Jesper Low Madsen <martin@martinjlowm.dk>
+To: <svea@dtu.dk>
+Subject: Re: BSc thesis
+References: <547DD606.1060104@imm.dtu.dk>
+X-Draft-From: ("INBOX" 6253)
+Date: Wed, 03 Dec 2014 08:52:51 +0100
+In-Reply-To: <547DD606.1060104@imm.dtu.dk> (Sven Karlsson's message of "Tue, 2
+	Dec 2014 16:08:54 +0100")
+Message-ID: <87a935f9v0.fsf@martinjlowm.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.4 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+Lines: 49
+Xref: laptop sent.2014-12:1
+X-Gnus-Article-Number: 1   Wed, 03 Dec 2014 08:52:54 +0100
+
+Hey Sven,
+
+Sven Karlsson <ska@imm.dtu.dk> writes:
+
+> Hi!
+>
+> Hope all is well. I have been traveling and will actually also take
+> one vacation day tomorrow. Then I am back until Christmas.
+
+All is well, although I've been busy with the semester's last hand-ins
+:(
+
+>
+> Have you had time to think about the wifi BSc topic? Are we committing
+> to that? I just need to know so that I can start the paperwork which
+> may need some extra time given the cross departmental aspect. I will
+> talk to Henrik.
+
+No, not really. I went to talk to Henrik (sorry, I forgot to inform you)
+and the deadline for a topic seems to be a general thing on DTU. He told
+me that the first week of the 3-week period would be the deadline.
+
+I also asked him what he could think of based on my ideas and the
+conclusion was to perhaps get an GSM module, connect it to a computer
+and debug/operate the communication using a CMU
+(http://www.rohde-schwarz.com/en/product/cmu200-productstartpage_63493-7830.html
+e.g.). It didn't sound like Photonics had any particular devices (except
+for the CMU) which could be useful for similar cases.
+
+However, this does sound like an easy project and I would like it to be
+a challenge.
+
+I didn't look more into the WiFi idea. I'm afraid it would be too
+similar to what I did in fagprojekt.
+
+(Also, just to be sure, when I mention Henrik it's Lehrmann
+Christiansen, not Wessing :))
+
+>
+> Best regards
+>  Sven
+
+--
+
+Martin Jesper Low Madsen
+
+Web: http://martinjlowm.dk/
+Mail: martin@martinjlowm.dk
+Phone: (+45) 20 68 55 51

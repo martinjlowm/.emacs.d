@@ -1,0 +1,20 @@
+@book{sauter2011gsm,
+  title={From GSM to LTE: An Introduction to Mobile Networks and Mobile Broadband},
+  author={Sauter, M.},
+  year={2011},
+  publisher={Wiley}
+}
+
+@unpublished{henrik_edge_i,
+	author	= {Christiansen, H. L.},
+	title	= {{GPRS and EDGE I}},
+	year	= {2014},
+	note	= "Lecture 7"
+}
+
+@misc{handley2006sdp,
+  title={{SDP: Session Description Protocol IETF RFC 4566}},
+  author={Handley, M and Jacobson, V and Perkins, C},
+  year={2006},
+  publisher={Luglio}
+}

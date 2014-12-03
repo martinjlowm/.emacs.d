@@ -1,0 +1,159 @@
+PATH=$PATH:~/maple16/bin
+PATH=$PATH:~/.gem/ruby/1.9.1/bin
+PATH=$PATH:~/matlab/bin
+PATH=$PATH:/opt/android-sdk/platform-tools
+PATH=$PATH:~/.gem/ruby/2.0.0/bin
+PATH=$PATH:~/bin/bin/x86_64-unknown-elf/bin
+PATH=$PATH:~/.config/bspwm
+
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.zsh_history
+
+OPTIRUN="$(command -v optirun)"
+
+export ALTERNATE_EDITOR=""
+# export GEM_HOME=~/.gem/ruby/2.0.0
+export BROWSER="conkeror"
+
+alias synserver="ssh -v -N -L localhost:3306:synserver1:22 s124320@sshlogin.compute.dtu.dk"
+alias pv="$OPTIRUN mpv -cache 163840"
+alias pacsize="pacman -Qi|awk '/^Installed Size/{print int(\$4), name} /^Name/{name=\$3}'|sort -nr | less"
+alias sshfen="ssh -i ~/.ssh/fenix -p 22527 lakridstrollet.regexp.se"
+alias space="du -sh"
+alias mpc="mpc -h home.martinjlowm.dk"
+alias glog="git log --graph --all
+ --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(bold white)— %an%C(reset)' --abbrev-commit"
+alias nyancat='telnet miku.acm.uiuc.edu'
+export pico='/home/martinjlowm/Dropbox/Public/Pictures'
+extract () {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)   tar xjf $1;;
+            *.tar.gz)    tar xzf $1;;
+            *.bz2)       bunzip2 $1;;
+            *.rar)       rar x $1;;
+            *.gz)        gunzip $1;;
+            *.tar)       tar xf $1;;
+            *.tbz2)      tar xjf $1;;
+            *.tgz)       tar xzf $1;;
+            *.zip)       unzip $1;;
+            *.Z)         uncompress $1;;
+            *.7z)        7z x $1;;
+            *)           echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+alias clipboard='tr -d "\r\n" | xclip -selection clipboard'
+linky () {
+    if [ -f $1 ] ; then
+        dropbox puburl $1 | clipboard
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+zippy () {
+    zip -r $1 ./*
+}
+
+hlfiles () {
+    for f in $1/*
+    do
+        ln $f;
+    done
+}
+
+search() {
+    if [ -d $2 ] ; then
+        grep $1 $(find $2 -type f);
+    else
+        grep $1 $(find . -type f);
+    fi
+}
+
+alias ls='ls -al --color'
+alias df='df --block-size=G'
+
+# . /usr/share/zsh/site-contrib/powerline.zsh
+
+alias dummylink='sudo ip l set dev dummy0 name eth0 && sudo ip link set dev eth0 address c4:85:08:3c:67:16'
+alias mat1='cd ~/Documents/01005_advanced_engineering_mathematics_1'
+alias mat2='cd ~/Documents/01005_advanced_engineering_mathematics_1' # Change to mat2 dir
+alias ope='cd ~/Documents/02159_operating_systems'
+alias unity='WINEDEBUG=-all WINEARCH=win32 WINEPREFIX=~/.wine32 $OPTIRUN wine ~/.wine/drive_c/Program\ Files\ \(x86\)/Unity/Editor/Unity.exe'
+alias pitorrent='ssh -t xbmc@home.martinjlowm.dk "tmux attach -t rtorrent"'
+alias irc='mosh -p 3001:13999 home.martinjlowm.dk -- tmux attach -t irssi'
+alias mountvar='sshfs martinjlowm@home.martinjlowm.dk:/mnt/Various /mnt/Various -o reconnect -o Ciphers=arcfour'
+alias mountvid='sshfs martinjlowm@home.martinjlowm.dk:/mnt/videos /mnt/videos -o reconnect -o Ciphers=arcfour'
+alias mountgbar='sshfs s124320@login.gbar.dtu.dk:/www/86/7/78591/public_html /home/martinjlowm/Dropbox/blivvektor.dk/public_html -o Ciphers=arcfour'
+alias sm='sudo sshfs martinjlowm@home.martinjlowm.dk:/mnt/Various /mnt/Various'
+
+bindkey -e
+
+bindkey "\e[1~" beginning-of-line # Home
+bindkey "\e[4~" end-of-line # End
+bindkey "\e[5~" beginning-of-history # PageUp
+bindkey "\e[6~" end-of-history # PageDown
+bindkey "\e[2~" quoted-insert # Ins
+bindkey "\e[3~" delete-char # Del
+bindkey "\e[5C" forward-word
+bindkey "\eOc" emacs-forward-word
+bindkey "\e[5D" backward-word
+bindkey "\eOd" emacs-backward-word
+bindkey "\e\e[C" forward-word
+bindkey "\e\e[D" backward-word
+bindkey "\e[Z" reverse-menu-complete # Shift+Tab
+# for rxvt
+bindkey "\e[7~" beginning-of-line # Home
+bindkey "\e[8~" end-of-line # End
+# for non RH/Debian xterm, can't hurt for RH/Debian xterm
+bindkey "\eOH" beginning-of-line
+bindkey "\eOF" end-of-line
+# for freebsd console
+bindkey "\e[H" beginning-of-line
+bindkey "\e[F" end-of-line
+# for guake
+bindkey "\eOF" end-of-line
+bindkey "\eOH" beginning-of-line
+bindkey "^[[1;5D" emacs-backward-word
+bindkey "^[[1;5C" emacs-forward-word
+bindkey "\e[3~" delete-char # Del
+
+bindkey '\C-w' kill-region
+copy-region-as-kill-deactivate-mark () {
+    zle copy-region-as-kill
+    zle set-mark-command -n -1
+}
+zle -N copy-region-as-kill-deactivate-mark
+bindkey '\ew' copy-region-as-kill-deactivate-mark
+
+
+autoload -Uz compinit
+compinit
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*' completer _expand _complete _ignored _approximate
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+zstyle ':completion::complete:*' use-cache 1
+zstyle ':completion:*:descriptions' format '%U%F{cyan}%d%f%u'
+
+export TERM=gnome-256color
+eval `dircolors ~/.dir_colors`
+source liquidprompt
+
+if [[ $TERM == "dumb" ]]; then	# in emacs
+    PS1='%(?..[%?])%!:%~%# '
+    # for tramp to not hang, need the following. cf:
+    # http://www.emacswiki.org/emacs/TrampMode
+    unsetopt zle
+    unsetopt prompt_cr
+    unsetopt prompt_subst
+    unfunction precmd
+    unfunction preexec
+fi
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting

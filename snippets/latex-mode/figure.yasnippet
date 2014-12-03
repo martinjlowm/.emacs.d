@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# contributor: Martin Jesper Low Madsen <martin@martinjlowm.dk>
+# key: figure
+# group: environments
+# name: \begin{figure} ... \end{figure}
+# --
+\begin{figure}${1:[H]}
+  \centering
+  \includegraphics${2:[width=\linewidth]}{$3}
+  \caption{$4}
+  \label{fig:$5}
+\end{figure}
+$0

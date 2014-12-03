@@ -1,0 +1,43 @@
+% arara: lualatex: { shell : yes }
+% arara: lualatex: { shell : yes }
+% arara: bibtex
+% arara: lualatex: { shell : yes }
+% arara: lualatex: { shell : yes }
+% arara: remove: { items: [ log, aux, toc, bbl, blg, pyg ] }
+\documentclass[12pt]{rapport}
+\usepackage{minted}
+
+\usemintedstyle{solarizedlight}
+\usepackage[hyphens]{url}
+\bibliographystyle{apalike3}
+\title{Voice over LTE, VoLTE}
+\course{34330: Introduction to Mobile Communication}
+\author{Martin Jesper Low Madsen (s124320)}
+\date{December 5, 2014}
+\supervisor{}
+
+\def\arraystretch{1.2}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+\section{Introduction}
+
+% Walk through PS nodes of a LTE network
+% What difficulties come up for CS communication
+% CSFB - Circuit Switched Fall Back
+% - Longer call set-up times
+% IMS and SIP/SDP walk through
+% https://tools.ietf.org/html/rfc4566
+% - RTP/UDP/IP for transport protocol
+% - The multicast group address for media - conference calls built-in feature
+% http://tools.ietf.org/html/rfc4145
+
+
+\section{Conclusion}
+
+\bibliography{litterature}
+
+\end{document}

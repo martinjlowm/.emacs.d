@@ -1,0 +1,27 @@
+@book{sauter2011gsm,
+  title={From GSM to LTE: An Introduction to Mobile Networks and Mobile Broadband},
+  author={Sauter, M.},
+  year={2011},
+  publisher={Wiley}
+}
+
+@unpublished{henrik_gsm_i,
+	author	= {Christiansen, H. L.},
+	title	= {{GSM fundamentals I}},
+	year	= {2014},
+	note	= "Lecture 2"
+}
+
+@unpublished{henrik_gsm_ii,
+	author	= {Christiansen, H. L.},
+	title	= {{GSM fundamentals II}},
+	year	= {2014},
+	note	= "Lecture 3"
+}
+
+@unpublished{cmu_manual,
+	author	= {Rhode & Schwarz},
+	title	= {{CMU200 -- Getting Started -- Hands On GSM}},
+	year	= {2014},
+        note    = "Supplementary material for course 34330."
+}

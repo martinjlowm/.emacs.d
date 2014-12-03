@@ -1,0 +1,122 @@
+<?php
+/*
++------------------ Studiestartshvervning! --------------------+
+| Dandomain sutter... tidligere årgange har brugt det, samt os |
+| KABS 14. Deres URL Forward er et gammelt frameset, som er    |
+| noget gammelt MØØØJ for at sige det mildt! Links på siden    |
+| fucker nemlig op og laver for hvert link der klikkes et nyt  |
+| frame, som erstatter <body>. Det vil sige trykker man på     |
+| link på siden 30 gange, så bliver dokumentet 30 gange så     |
+| stort. Ikke smart...                                         |
+|                                                              |
+| Redeleger gerne domænerne til GratisDNS, så undgås alt det   |
+| frameset fnader. Plus der spares penge!                      |
+| DTUs servere bruges normalt til at hoste hjemmesiderne. Så   |
+| det er egentlig http://www.student.dtu.dk/~sXXXXXX, hvor     |
+| hjemmesiden ligger. Der kan naturligvis anvendes andre       |
+| alternativer.                                                |
+|                                                              |
+| Heroku (på nuværende tidspunkt) tilbyder gratis hosting. Med |
+| de begrænsninger at der ikke er nogen decideret maskine til  |
+| at holde den kørende. Med lidt hokus pokus kan det dog lade  |
+| sig gøre. UNIX systemer har noget som hedder cron jobs, som  |
+| muliggør at køre et program i et tidsmæssig mønster. Dvs. at |
+| man kan sætte den til at besøge en hjemmeside hvert 5. minut |
+| for eksempel. Gør man dette kan hjemmesiden holdes oppe! Et  |
+| eksempel er at sætte sin router til at gøre det. Det kræver  |
+| dog, at man har et UNIX baseret firmware på routeren, som    |
+| giver mulighed for det. Tomato projektet er et eksempel.     |
+|                                                              |
+| Dette setup er et nyt lavet fra bunden af i forhold til      |
+| tidligere år (12 og 13) og skulle forhåbentligt gøre         |
+| hjemmesiden mere overskuelig.                                |
+| Hvis der er nogen spørgsmål, så kontakt                      |
+|                                                              |
+| martin@martinjlowm.dk                                        |
++--------------------------------------------------------------+
+ */
+
+date_default_timezone_set("CET");
+
+$_ACCESS = true;
+$launch_date = strtotime("January 23, 2014 12:00 PM");
+
+// System time is apparently off in an odd way.
+$now = strtotime('+40 minutes', time()+50);
+$remaining = $launch_date - $now;
+
+$page = $_GET['page'];
+switch($page) {
+  case "kabs" :
+    if (isset($_GET['subpage']))
+      require "pages/kabs/" . $_GET['subpage'] . ".php";
+    else
+      require 'pages/kabs.php';
+    break;
+  case "vektor":
+    require 'pages/vektor.php';
+    break;
+  case "weekendvektor":
+    require 'pages/weekendvektor.php';
+    break;
+  case "hyttebums":
+    require 'pages/hyttebums.php';
+    break;
+  case 'optur':
+    require 'pages/optur.php';
+    break;
+  case 'voptur':
+    require 'pages/voptur.php';
+    break;
+  case 'uddannelse':
+    require 'pages/uddannelse.php';
+    break;
+  case 'studiestarten':
+    require 'pages/studiestarten.php';
+    break;
+  case 'ansoeg':
+    require 'pages/ansoeg.php';
+    break;
+  default:
+    require 'pages/velkommen.php';
+}
+
+/* if (strpos($_SERVER['HTTP_REFERER'], 'skip') ||
+$remaining < 0 ||
+strpos($_SERVER['REQUEST_URI'], 'skip')) {
+$_ACCESS = true;
+
+} */
+require 'tpl.php';
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="stylesheets/main.css" type="text/css" media="screen" />
+    <?php if (!empty($_STYLE)) { ?>
+      <?php foreach ($_STYLE as $s) { ?>
+        <link rel="stylesheet" href="<?php echo $s; ?>" type="text/css" media="screen" />
+      <?php } ?>
+    <?php } ?>
+  </head>
+  <body>
+    <?php if ($_ACCESS) { ?>
+      <?php echo $TPL; ?>
+    <?php } else { ?>
+      <div id="countdown" class="inside text-align-center">
+        <div>
+          <span>T MINUS</span>
+        </div>
+        <div>
+          <span id="counter"></span>
+        </div>
+      </div>
+      <script type="text/javascript">
+       var LAUNCH_TIME = <?php echo ($launch_date + 2)*1000; ?>;
+       var NOW = <?php echo $now*1000; ?>;
+      </script>
+      <script type="text/javascript" src="javascripts/countdown.js"></script>
+    <?php } ?>
+  </body>
+</html>

@@ -1,0 +1,78 @@
+;; -*- emacs-lisp -*- <14/12/03 13:23:47 /home/martinjlowm/.emacs.d/tramp>
+;; Tramp connection history.  Don't change this file.
+;; You can delete it, forcing Tramp to reapply the checks.
+
+((["ssh" "root" "home.martinjlowm.dk" nil nil]
+  ("uname" "Linux 3.6.11-12-ARCH+")
+  ("test" "test")
+  ("remote-path"
+   ("/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin"))
+  ("remote-shell" "/bin/sh")
+  ("busybox" nil)
+  ("perl-file-spec" t)
+  ("perl-cwd-realpath" t)
+  ("perl" "\\perl")
+  ("readlink" "\\readlink")
+  ("stat" "\\stat")
+  ("file-exists" "test -e")
+  ("id" "/bin/id")
+  ("gid-integer" 0)
+  ("ls" "/bin/ls --color=never")
+  ("uid-integer" 0)
+  ("~" "/root"))
+ (["ssh" "xbmc" "home.martinjlowm.dk" nil nil]
+  ("uname" "Linux 3.12.20-1-ARCH")
+  ("test" "test")
+  ("remote-path"
+   ("/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin"))
+  ("remote-shell" "/bin/sh")
+  ("busybox" nil)
+  ("perl-file-spec" t)
+  ("perl-cwd-realpath" t)
+  ("perl" "\\perl")
+  ("readlink" "\\readlink")
+  ("stat" "\\stat")
+  ("file-exists" "test -e")
+  ("id" "/bin/id")
+  ("gid-integer" 1001)
+  ("ls" "/bin/ls --color=never")
+  ("uid-integer" 1001))
+ (["sudo" "root" "localhost" nil nil]
+  ("uname" "Linux 3.17.1-1-ARCH")
+  ("test" "test")
+  ("remote-path"
+   ("/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin"))
+  ("remote-shell" "/bin/sh")
+  ("locale" "LC_ALL=en_US.utf8")
+  ("readlink" "\\readlink")
+  ("stat" "\\stat")
+  ("file-exists" "test -e")
+  ("id" "/bin/id")
+  ("gid-integer" 0)
+  ("gid-string" "root")
+  ("uid-integer" 0)
+  ("perl-file-spec" t)
+  ("perl-cwd-realpath" t)
+  ("perl" "\\perl"))
+ (["ssh" "s124320" "localhost#3306" nil nil]
+  ("uname" "Linux 3.2.0-4-amd64")
+  ("test" "test")
+  ("remote-path"
+   ("/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin"))
+  ("remote-shell" "/bin/sh")
+  ("locale" "LC_ALL=en_US.utf8")
+  ("stat" "\\stat")
+  ("file-exists" "test -e")
+  ("id" "/usr/bin/id")
+  ("gid-string" "s124320")
+  ("perl-file-spec" t)
+  ("perl-cwd-realpath" t)
+  ("perl" "\\perl")
+  ("readlink" "\\readlink")
+  ("gid-integer" 45131)
+  ("ls" "/bin/ls --color=never")
+  ("uid-integer" 45131))
+ (["scp" nil "ssh" nil nil]
+  nil)
+ (["ssh" "s124320" "localhost" nil nil]
+  nil))

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: envreg
+# binding: C-x e
+# --
+\begin{${1:environment}}
+  `yas/selected-text`
+\end{$1}

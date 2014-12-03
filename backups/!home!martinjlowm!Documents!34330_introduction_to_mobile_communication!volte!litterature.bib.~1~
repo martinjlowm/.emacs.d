@@ -1,0 +1,24 @@
+@book{sauter2011gsm,
+  title={From GSM to LTE: An Introduction to Mobile Networks and Mobile Broadband},
+  author={Sauter, M.},
+  year={2011},
+  publisher={Wiley}
+}
+
+@unpublished{henrik_edge_i,
+	author	= {Christiansen, H. L.},
+	title	= {{GPRS and EDGE I}},
+	year	= {2014},
+	note	= "Lecture 7"
+}
+
+@misc{http,
+  author = {Fielding, Roy and Gettys, Jim and Mogul, Jeffrey and Frystyk, Henrik and Masinter, Larry and Leach, Paul and Berners-Lee, Tim},
+  howpublished = {RFC 2616 (Standard). \url{https://www.ietf.org/rfc/rfc2616.txt}.},
+  month = June,
+  note = {Last visited 11/06/2014.},
+  number = 2616,
+  organization = {Network Working Group},
+  title = {{Hypertext Transfer Protocol -- HTTP/1.1}},
+  year = 1999
+}

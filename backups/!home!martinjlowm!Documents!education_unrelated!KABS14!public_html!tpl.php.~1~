@@ -1,0 +1,61 @@
+<?php
+$_STYLE = array("assets/stylesheets/font.css",
+                "assets/stylesheets/space.css",
+                "assets/stylesheets/kabs.css",
+                "assets/stylesheets/ansoeg.css");
+
+$_NAV = '';
+
+$pages = array("KABS",
+               "Vektor",
+               // "Weekendvektor",
+               // "Hyttebums",
+               "vOPtur",
+               "Uddannelse",
+               "Studiestarten",
+               "Ansoeg");
+foreach ($pages as $_page) {
+  $classes = array();
+  $class = "";
+
+  if ($_page === $pages[0])
+    $classes[] = 'first';
+
+  if ($_page == $pages[count($pages) - 1])
+    $classes[] = 'last';
+
+  $_page_lowercase = strtolower($_page);
+  if ($_page_lowercase == $page)
+    $classes[] = 'current';
+
+  $_page = $_page === "Ansoeg" ? "Ansøg" : $_page;
+
+  if (!empty($classes))
+    $class = "class='" . implode(" ", $classes) . "'";
+  $_NAV .= "<li $class><a href='?page=$_page_lowercase'>$_page</a><div></div><span></span></li>";
+}
+
+$TPL = <<<EOT
+<header>
+  <div class="inside text-align-center">
+    <h1>
+      <a href="./">KABS 14</a>
+    </h1>
+  </div>
+</header>
+<nav>
+  <div class="inside text-align-center">
+    <ul class="main">
+      $_NAV
+    </ul>
+  </div>
+</nav>
+<div id="page" class="page-$page">
+  <div class="inside">
+    <section id="content">
+      $yield
+    </section>
+  </div>
+</div>
+EOT;
+?>

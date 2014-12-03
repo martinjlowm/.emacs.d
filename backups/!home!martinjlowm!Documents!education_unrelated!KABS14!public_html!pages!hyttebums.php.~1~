@@ -1,0 +1,205 @@
+<?php
+$page = "hyttebums";
+
+$yield = <<<EOT
+<h1>Hyttebums</h1>
+<p>Føler du, at du er den vildeste gourmetkok og kan du godt lide at
+lave mad til mange mennesker? Så er hyttebums helt sikkert noget for
+dig! Som en del af rusturene er der brug for et hold af festlige
+mennesker til at kokkerere for de nystuderende.</p>
+<p>Som hyttebums kommer du til at samarbejde med vektorer og KABS på
+den pågældende rustur med fokus på madlavning.</p>
+<br />
+<p>Tilmeldingen til hyttebums er ikke åben endnu.</p>
+EOT;
+
+
+
+
+// <?php
+// $page = "hyttebums";
+
+// $deadline = strtotime("April 21, 2014 12:00 PM");
+// // ??? hmm
+// $now = ($now + 43);
+// $remaining = $deadline - $now;
+// $deadline = ($deadline + 2)*1000;
+// $now = $now*1000;
+
+// if (isset($_GET['sent'])) {
+//   $sent = "<div id='message' ";
+//   echo $_GET['sent'];
+//   if ($_GET['sent'] == "true") {
+//     $sent .= "class='success'>";
+//     $sent .= "<span>Din ansøgning blev sendt!</span>";
+//   } else {
+//     $sent .= "class='error'>";
+//     $sent .= "<span>Der skete en fejl! Fik du udfyldt alle felterne?
+//   Kontakt en KABS, hvis absolut intet fungerer.</span>";
+//   }
+//   $sent .= "</div>";
+// }
+
+// if ($remaining > 0) {
+//   $yield = <<<EOT
+// <h1>Hyttebums</h1>
+// <p>Føler du, at du er den vildeste gourmetkok og kan du godt lide at
+// lave mad til mange mennesker? Så er hyttebums helt sikkert noget for
+// dig! Som en del af rusturene er der brug for et hold af festlige
+// mennesker til at kokkerere for de nystuderende.</p>
+// <p>Som hyttebums kommer du til at samarbejde med vektorer og KABS på
+// den pågældende rustur med fokus på madlavning.</p>
+// <p>Rusturene foregår 25.-29. august og 22.-24. august for
+//   weekendrusturen.</p>
+// <p>Forberedelsesturene ligger i perioden 1.-24. august. Datoerne er
+//   specifikke for hvert individuelt hold og aftales internt.</p>
+// <br />
+// $sent
+// <p>Ansøgningen er nu åben! Ansøgningsfristen er d. 21. april kl. 12.00 middag.</p>
+// <p>Kreative- og/eller gruppeansøgninger kan sendes direkte til <a
+//   href="mailto:dtu.kabs@gmail.com">dtu.kabs@gmail.com</a>. Emnet i
+//   mailen skal være "Hyttebumsansøgning: Hold navn" som hold eller
+//   "Hyttebumsansøgning: Fornavn Efternavn" som individuel ansøger.</p>
+// <p>Husk relevant information som det står på denne side!</p>
+// <br />
+// <div id="countdown" class="inside text-align-center">
+//   <div>
+//     <span>Nedtælling til ansøgningsfrist</span>
+//   </div>
+//   <div>
+//     <span id="counter"></span>
+//   </div>
+// </div>
+// <form method="post" action="send_email.php">
+//   <div>
+//     <label for="fornavn">Fornavn</label>
+//     <input name="fornavn" id="fornavn"  type="text" required />
+//   </div>
+//   <div>
+//     <label for="efternavn">Efternavn</label>
+//     <input name="efternavn" id="efternavn" type="text" required />
+//   </div>
+//   <div>
+//     <label for="studienummer">Studienummer</label>
+//     <input name="studienummer" id="studienummer" type="text" placeholder="f.eks. s123456" required />
+//   </div>
+//   <div>
+//     <label for="retning">Din retning</label>
+//     <div id="retning-style">
+//     <select name="retning" id="retning">
+//       <option value="Civil Bioteknologi">Civil Bioteknologi</option>
+//       <option value="Civil Byggeteknologi">Civil Byggeteknologi</option>
+//       <option value="Civil Bygningsdesign">Civil Bygningsdesign</option>
+//       <option value="Civil Design & Innovation">Civil Design & Innovation</option>
+//       <option value="Civil Elektroteknologi">Civil Elektroteknologi</option>
+//       <option value="Civil Fysik og Nanoteknologi">Civil Fysik og Nanoteknologi</option>
+//       <option value="Civil Geofysik og Rumteknologi">Civil Geofysik og Rumteknologi</option>
+//       <option value="Civil Kemi og Teknologi">Civil Kemi og Teknologi</option>
+//       <option value="Civil Matematik og Teknologi" >Civil Matematik og Teknologi</option>
+//       <option value="Civil Medicin og Teknologi">Civil Medicin og Teknologi</option>
+//       <option value="Civil Netværksteknologi og IT">Civil Netværksteknologi og IT</option>
+//       <option value="Civil Produktion og Konstruktion">Civil Produktion og Konstruktion</option>
+//       <option value="Civil Softwareteknologi">Civil Softwareteknologi</option>
+//       <option value="Civil Strategisk Analyse og Systemdesign">Civil Strategisk Analyse og Systemdesign</option>
+//       <option value="Civil Teknisk Biomedicin">Civil Teknisk Biomedicin</option>
+//       <option value="Civil Vand, Bioressourcer og Miljømanagement">Civil Vand, Bioressourcer og Miljømanagement</option>
+//       <option value="Diplom Arktisk Teknologi">Diplom Arktisk Teknologi</option>
+//       <option value="Diplom Byggeri og Infrastruktur">Diplom Byggeri og Infrastruktur</option>
+//       <option value="Diplom Bygningsdesign">Diplom Bygningsdesign</option>
+//       <option value="Diplom Eksport og Teknologi">Diplom Eksport og Teknologi</option>
+//       <option value="Diplom Elektrisk Energiteknik">Diplom Elektrisk Energiteknik</option>
+//       <option value="Diplom Elektro">Diplom Elektro</option>
+//       <option value="Diplom Fødevareanalyse">Diplom Fødevareanalyse</option>
+//       <option value="Diplom IT-Elektronik">Diplom IT-Elektronik</option>
+//       <option value="Diplom IT og Økonomi">Diplom IT og Økonomi</option>
+//       <option value="Diplom Kemi- og Bioteknologi">Diplom Kemi- og Bioteknologi</option>
+//       <option value="Diplom Maskin">Diplom Maskin</option>
+//       <option value="Diplom Proces og Innovation">Diplom Proces og Innovation</option>
+//       <option value="Diplom Produktion">Diplom Produktion</option>
+//       <option value="Diplom Software">Diplom Software</option>
+//       <option value="Diplom Sundhedsteknologi">Diplom Sundhedsteknologi</option>
+//       <option value="Diplom Teknologi og Økonomi (Kemi)">Diplom Teknologi og Økonomi (Kemi)</option>
+//       <option value="Diplom Trafik og Transport">Diplom Trafik og Transport</option>
+//     </select>
+//     </div>
+//   </div>
+//   <div>
+//     <label for="email">E-mail</label>
+//     <input name="email" id="email" type="email" placeholder="f.eks. mig@mail.dk" required />
+//   </div>
+//   <div>
+//     <label for="telefon">Telefonnummer</label>
+//     <input name="telefon" id="telefon" type="tel" placeholder="f.eks. 12 34
+//   56 78" required />
+//   </div>
+//   <div>
+//     <label for="age">Alder (under rusturen)</label>
+//     <input name="age" id="age" type="number" placeholder="f.eks. 14" required />
+//   </div>
+//   <div>
+//     <span class="text-align-center">Har du kørekort?</span>
+//     <div class="text-align-center">
+//       <div>
+//         <input name="koerekort" id="koerekort_ja" type="radio" value="Ja" required /><label for="koerekort_ja">Ja</label>
+//       </div>
+//       <div>
+//         <input name="koerekort" id="koerekort_nej" type="radio" value="Nej" /><label for="koerekort_nej">Nej</label>
+//       </div>
+//     </div>
+//   </div>
+//   <div class="text-align-center">
+//     <label for="erfaring">Har du relevant madlavningserfaring?</label>
+//     <textarea name="erfaring" id="erfaring" ></textarea>
+//   </div>
+//   <div class="text-align-center">
+//     <label for="studiestartserfaring">Har du studiestartserfaring?</label>
+//     <textarea name="studiestartserfaring" id="studiestartserfaring"></textarea>
+//   </div>
+//   <div>
+//     <label for="hold">Navne på medsøgere*:</label>
+//     <input name="hold" id="hold" type="text" placeholder='f.eks. "J-Low from the Block, DJ Morten"'/>
+//   </div>
+//   <div class="text-align-center">
+//     <p>* Valgfrit. Men nævn gerne dit hold under KABS hilsnen.</p>
+//   </div>
+//   <div>
+//     <span class="text-align-center">Er det evt. okay, at dele holdet?</span>
+//     <div class="text-align-center">
+//       <div>
+//         <input name="split" id="split_ja" type="radio" value="Ja" /><label for="split_ja">Ja</label>
+//       </div>
+//       <div>
+//         <input name="split" id="split_nej" type="radio" value="Nej" /><label for="split_nej">Nej</label>
+//       </div>
+//     </div>
+//   </div>
+//   <div class="text-align-center">
+//     <label for="hilsen">Personlig hilsen til KABS:</label>
+//     <textarea name="hilsen" id="hilsen"></textarea>
+//   </div>
+//   <div class="text-align-center">
+//     <input type="submit" value="Send ansøgning!" title="Bliv Vektor!" />
+//   </div>
+// </form>
+// <script type="text/javascript">
+//   var LAUNCH_TIME = $deadline;
+//   var NOW = $now;
+// </script>
+// <script type="text/javascript" src="javascripts/countdown.js"></script>
+// EOT;
+// } else {
+// $yield = <<<EOT
+// <h1>Hyttebums</h1>
+// <p>Føler du, at du er den vildeste gourmetkok og kan du godt lide at
+// lave mad til mange mennesker? Så er hyttebums helt sikkert noget for
+// dig! Som en del af rusturene er der brug for et hold af festlige
+// mennesker til at kokkerere for de nystuderende.</p>
+// <p>Som hyttebums kommer du til at samarbejde med vektorer og KABS på
+// den pågældende rustur med fokus på madlavning.</p>
+// <br />
+// <p>Tilmeldingen til hyttebums er lukket.</p>
+// EOT;
+// }
+
+// ?>
+?>

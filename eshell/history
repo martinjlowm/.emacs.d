@@ -1,0 +1,30 @@
+echo $CLASSPATH
+unset CLASSPATH
+ls
+systemctl status pulseaudio.service
+systemctl status syslog.service
+systemctl status syslog.service
+pacman -S syslog-ng
+pacman -S syslog-ng
+pacman -Ql syslog-ng
+maple
+cd
+cd maple16/bin
+./xmaple 
+./maple
+grub-mkconfig -o /boot/grub/grub.cfg
+cd
+pitorrent
+top
+cd ..
+cd ~/Documents/02161_software_engineering_1/assignments/
+git clone https://github.com/martinjlowm/glowing-ironman.git
+git clone git@github.com:martinjlowm/glowing-ironman.git
+cd glowing-ironman/
+ls
+ls -al
+ls
+ls
+rm AdministratorTest.java EmployeeTest.java 
+ls
+rm \#EmployeeTest.java\# 
