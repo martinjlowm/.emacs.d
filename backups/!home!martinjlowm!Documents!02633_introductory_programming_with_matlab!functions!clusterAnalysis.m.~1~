@@ -1,0 +1,49 @@
+function clusterAssignments = clusterAnalysis(reflectance)
+odds = [];
+evens = [];
+for i = 1:length(reflectance)
+    odd = mod(i, 2);
+    if odd
+        odds = [odds reflectance(i)];
+    else
+        evens = [evens reflectance(i)];
+    end
+end
+
+mOne = mean(odds);
+mTwo = mean(evens);
+
+closestMOne = [];
+closestMTwo = [];
+
+while mOne == prevMOne && mTwo == prevMTwo
+    prevMOne = mOne;
+    prevMTwo = mTwo;
+    for i = 1:length(reflectance)
+        value = reflectance(i);
+        diffOne = abs(mOne - value);
+        diffTwo = abs(mTwo - value);
+
+        closestMean = min(diffOne, diffTwo);
+        if closestMean == diffOne
+            closestMOne = [closestMOne value];
+        else
+            closestMTwo = [closestMTwo value];
+        end
+    end
+
+    mOne = mean(closestMOne);
+    mTwo = mean(closestMTwo);
+end
+
+clusterAssignments = [];
+for i = 1:length(reflectance)
+    isInMOne = any(find(mOne == reflectance(i)));
+
+    if isInMOne
+        clusterAssignments(i) = 1;
+    else
+        clusterAssignments(i) = 2;
+    end
+end
+end

@@ -1,25 +1,25 @@
-;; -*- emacs-lisp -*- <14/12/03 13:23:47 /home/martinjlowm/.emacs.d/tramp>
+;; -*- emacs-lisp -*- <15/01/05 23:54:44 /home/martinjlowm/.emacs.d/tramp>
 ;; Tramp connection history.  Don't change this file.
 ;; You can delete it, forcing Tramp to reapply the checks.
 
 ((["ssh" "root" "home.martinjlowm.dk" nil nil]
-  ("uname" "Linux 3.6.11-12-ARCH+")
+  ("uname" "Linux 3.12.34-1-ARCH")
   ("test" "test")
   ("remote-path"
    ("/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin"))
   ("remote-shell" "/bin/sh")
-  ("busybox" nil)
-  ("perl-file-spec" t)
-  ("perl-cwd-realpath" t)
-  ("perl" "\\perl")
-  ("readlink" "\\readlink")
+  ("locale" "LC_ALL=en_US.utf8")
   ("stat" "\\stat")
   ("file-exists" "test -e")
   ("id" "/bin/id")
+  ("gid-string" "root")
+  ("perl-file-spec" t)
+  ("perl-cwd-realpath" t)
+  ("perl" "\\perl")
   ("gid-integer" 0)
+  ("readlink" "\\readlink")
   ("ls" "/bin/ls --color=never")
-  ("uid-integer" 0)
-  ("~" "/root"))
+  ("uid-integer" 0))
  (["ssh" "xbmc" "home.martinjlowm.dk" nil nil]
   ("uname" "Linux 3.12.20-1-ARCH")
   ("test" "test")
@@ -72,7 +72,23 @@
   ("gid-integer" 45131)
   ("ls" "/bin/ls --color=never")
   ("uid-integer" 45131))
+ (["ssh" "kodi" "home.martinjlowm.dk" nil nil]
+  ("uname" "Linux 3.12.34-1-ARCH")
+  ("test" "test")
+  ("remote-path"
+   ("/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin"))
+  ("remote-shell" "/bin/sh")
+  ("locale" "LC_ALL=en_US.utf8")
+  ("stat" "\\stat")
+  ("file-exists" "test -e")
+  ("id" "/bin/id")
+  ("gid-string" "kodi")
+  ("perl-file-spec" t)
+  ("perl-cwd-realpath" t)
+  ("perl" "\\perl")
+  ("gid-integer" 993)
+  ("readlink" "\\readlink")
+  ("ls" "/bin/ls --color=never")
+  ("uid-integer" 993))
  (["scp" nil "ssh" nil nil]
-  nil)
- (["ssh" "s124320" "localhost" nil nil]
   nil))

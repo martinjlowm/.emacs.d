@@ -1,0 +1,20 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = ssh://s124320@localhost:3306/opt/tinuso/nboa/tinuso-binutils.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[remote "mjlm_syn"]
+	url = ssh://s124320@localhost:3306/opt/tinuso/s124320/tinuso-binutils.git
+	fetch = +refs/heads/*:refs/remotes/mjlm_syn/*
+[remote "upstream"]
+	url = git://sourceware.org/git/binutils-gdb.git
+	fetch = +refs/heads/*:refs/remotes/upstream/*
+[branch "2_25-branch"]
+	remote = upstream
+	merge = refs/heads/binutils-2_25-branch

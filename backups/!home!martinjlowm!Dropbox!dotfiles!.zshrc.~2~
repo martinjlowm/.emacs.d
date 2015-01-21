@@ -6,6 +6,7 @@ PATH=$PATH:~/.gem/ruby/2.0.0/bin
 PATH=$PATH:~/bin/bin/x86_64-unknown-elf/bin
 PATH=$PATH:~/.config/bspwm
 
+PYTHONPATH=~/.python
 HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.zsh_history
@@ -16,14 +17,16 @@ export ALTERNATE_EDITOR=""
 # export GEM_HOME=~/.gem/ruby/2.0.0
 export BROWSER="conkeror"
 
+alias gitsupdate="git submodule update --remote --recursive"
+alias listps="smbclient -L ait-print.win.dtu.dk -U s124320 -W win.dtu.dk"
 alias synserver="ssh -v -N -L localhost:3306:synserver1:22 s124320@sshlogin.compute.dtu.dk"
+alias synjenkins="ssh -p 3306 -v -N -L localhost:8080:synserver1:8080 s124320@localhost"
 alias pv="$OPTIRUN mpv -cache 163840"
 alias pacsize="pacman -Qi|awk '/^Installed Size/{print int(\$4), name} /^Name/{name=\$3}'|sort -nr | less"
 alias sshfen="ssh -i ~/.ssh/fenix -p 22527 lakridstrollet.regexp.se"
 alias space="du -sh"
 alias mpc="mpc -h home.martinjlowm.dk"
-alias glog="git log --graph --all
- --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(bold white)— %an%C(reset)' --abbrev-commit"
+alias glog="git log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(bold white)— %an%C(reset)' --abbrev-commit"
 alias nyancat='telnet miku.acm.uiuc.edu'
 export pico='/home/martinjlowm/Dropbox/Public/Pictures'
 extract () {
@@ -85,7 +88,7 @@ alias mat1='cd ~/Documents/01005_advanced_engineering_mathematics_1'
 alias mat2='cd ~/Documents/01005_advanced_engineering_mathematics_1' # Change to mat2 dir
 alias ope='cd ~/Documents/02159_operating_systems'
 alias unity='WINEDEBUG=-all WINEARCH=win32 WINEPREFIX=~/.wine32 $OPTIRUN wine ~/.wine/drive_c/Program\ Files\ \(x86\)/Unity/Editor/Unity.exe'
-alias pitorrent='ssh -t xbmc@home.martinjlowm.dk "tmux attach -t rtorrent"'
+alias pitorrent='ssh -t kodi@home.martinjlowm.dk "tmux attach -t rtorrent"'
 alias irc='mosh -p 3001:13999 home.martinjlowm.dk -- tmux attach -t irssi'
 alias mountvar='sshfs martinjlowm@home.martinjlowm.dk:/mnt/Various /mnt/Various -o reconnect -o Ciphers=arcfour'
 alias mountvid='sshfs martinjlowm@home.martinjlowm.dk:/mnt/videos /mnt/videos -o reconnect -o Ciphers=arcfour'

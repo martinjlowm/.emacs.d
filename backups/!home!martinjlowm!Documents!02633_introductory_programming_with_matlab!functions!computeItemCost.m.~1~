@@ -1,0 +1,4 @@
+function itemCost = computeItemCost(resourceItemMatrix, ...
+                                    resourceCost)
+itemCost = resourceItemMatrix * resourceCost;
+end

@@ -1,0 +1,3 @@
+function theta = acuteAngle(v1, v2)
+
+end

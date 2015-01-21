@@ -1,0 +1,27 @@
+import java.security.*;
+public class HelloWorld{
+
+     public static void main(String []args){
+        String a = "Ci2w5X6N:960db7ecf5f91d7f:P:1105921701:DK:1337madsen:2014-12-21 01:25:06Z";
+        final MessageDigest m = MessageDigest.getInstance("SHA-256");
+        m.reset();
+        m.update(a.getBytes());
+        byte[] digest = m.digest();
+        m.reset();
+        StringBuilder sb = new StringBuilder();
+        for (int length = digest.length, i = 0; i < length; ++i) {
+            sb.append(Integer.toString(digest[i] + 255 + 256, 16).substring(1));
+        }
+        String stringy = sb.toString();
+        m.update(stringy.getBytes());
+
+        byte[] digestx = m.digest();
+        StringBuilder sc = new StringBuilder();
+        for (int length = digestx.length, i = 0; i < length; ++i) {
+            sc.append(Integer.toString(digestx[i] + 255 + 256, 16).substring(1));
+        }
+        String stringx = sc.toString();
+
+        System.out.println(stringx);
+     }
+}

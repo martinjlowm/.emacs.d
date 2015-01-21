@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Matlab
+Comment=A high-level language for numerical computation and visualization
+Exec=matlab -desktop
+Icon=matlab
+Terminal=false
+StartupNotify=false
+Categories=Application;

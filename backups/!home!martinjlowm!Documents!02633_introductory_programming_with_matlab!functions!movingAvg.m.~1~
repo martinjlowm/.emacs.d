@@ -1,0 +1,5 @@
+function ysmooth = movingAvg(y)
+for i = -2:1:2
+    shiftedY = circshift(y, [0, i])
+end
+end

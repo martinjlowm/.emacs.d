@@ -64,9 +64,9 @@
         branch = master
 
 [submodule "emacs-neotree"]
-        path = vendor/emacs-neotree
+	path = vendor/emacs-neotree
 	url = git@github.com:martinjlowm/emacs-neotree.git
-        branch = mjlm_personalized
+	branch = mjlm_personalized
 
 [submodule "expand-region.el"]
         path = vendor/expand-region.el
@@ -176,3 +176,20 @@
 	path = vendor/dropdown-list
 	url = git@github.com:martinjlowm/dropdown-list.git
         branch = master
+[submodule "bbdb"]
+	path = vendor/bbdb
+	url = git://git.savannah.nongnu.org/bbdb.git
+	branch = master
+[submodule "matlab-emacs"]
+	path = vendor/matlab-emacs
+	url = git@github.com:jguenther/matlab-emacs.git
+	branch = master
+[submodule "vendor/emacs-gradle-mode"]
+	path = vendor/emacs-gradle-mode
+	url = git@github.com:jacobono/emacs-gradle-mode.git
+[submodule "vendor/groovy-emacs-modes"]
+	path = vendor/groovy-emacs-modes
+	url = git@github.com:Groovy-Emacs-Modes/groovy-emacs-modes.git
+[submodule "vendor/auctex-latexmk"]
+	path = vendor/auctex-latexmk
+	url = git@github.com:tom-tan/auctex-latexmk.git

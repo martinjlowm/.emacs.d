@@ -1,15 +1,48 @@
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
+(require 'cl)
+(tool-bar-mode 0)
+(menu-bar-mode 0)
+(scroll-bar-mode 0)
+(set-fringe-mode 0)
 (setq ring-bell-function 'ignore)
-;; C-x M-f -> follow link erc
+
+;; Mail
+(setq mm-text-html-renderer 'w3m)
+(setq gnus-select-method
+      '(nnimap "gmail"
+	       (nnimap-address "imap.gmail.com")
+	       (nnimap-server-port 993)
+	       (nnimap-stream ssl)
+               (nnimap-authenticator login)))
+
+(setq message-send-mail-function 'smtpmail-send-it
+      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+      smtpmail-auth-credentials '(("smtp.gmail.com" 587
+				   "martin@martinjlowm.dk" nil))
+      smtpmail-default-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 587
+      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
+(setq message-citation-line-function 'message-insert-formatted-citation-line)
+(setq message-citation-line-format "\n\nOn %a, %b %d %Y, %f wrote:")
+;; (gnus-demon-add-handler 'gnus-demon-scan-news 2 t)
+(setq gnus-signature-file "~/.signature")
 (setq user-mail-address "martin@martinjlowm.dk")
+
+(require 'bbdb)
+(bbdb-initialize 'gnus 'message)
+(add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
 
 (setq tramp-shell-prompt-pattern "^[^$>\n]*[#$%>] *\\(\[[0-9;]*[a-zA-Z] *\\)*")
 (global-unset-key (kbd "C-z"))
 (global-set-key (kbd "<escape>") 'keyboard-quit)
 (setq-default indent-tabs-mode nil)
 (show-paren-mode t)
+
+(set-face-attribute 'default nil :height 140)
+
+(add-to-list 'load-path "~/.emacs.d/vendor/names")
+(add-to-list 'load-path "~/.emacs.d/vendor/aggressive-indent-mode")
+(require 'aggressive-indent)
 
 (add-to-list 'load-path "~/.emacs.d/vendor/google-c-style")
 (require 'google-c-style)
@@ -28,17 +61,20 @@
 
 (load "auctex.el" nil t t)
 (load "preview-latex.el" nil t t)
-(defun TeX-compile ()
-  "Compiles LaTeX without prompting"
+
+(defun run-arara ()
   (interactive)
-  (TeX-command "LaTeX" 'TeX-master-file))
+  (message (shell-command-to-string (concat "arara " (buffer-file-name)))))
 
-(autoload 'whizzytex-mode "whizzytex" "WhizzyTeX, a minor-mode WYSIWYG environment for LaTeX" t)
 (add-hook 'TeX-mode-hook (lambda ()
-                             (define-key LaTeX-mode-map (kbd "C-c C-c") 'TeX-compile)
-                             (setq TeX-PDF-mode t)))
-
-(add-hook 'doc-view-mode-hook 'auto-revert-mode)
+                           (TeX-PDF-mode t)
+                           (setq TeX-view-program-selection (quote
+                                                             (((output-dvi style-pstricks)
+                                                               "dvips and gv")
+                                                              (output-dvi "xdvi")
+                                                              (output-pdf "xdg-open")
+                                                              (output-html "xdg-open"))))
+                           (define-key LaTeX-mode-map (kbd "C-c C-c") 'run-arara)))
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       backup-by-copying t    ; Don't delink hardlinks
@@ -46,6 +82,15 @@
       delete-old-versions t  ; Automatically delete excess backups
       kept-new-versions 20   ; how many of the newest versions to keep
       kept-old-versions 5)
+
+(defun task-sync ()
+  (interactive)
+  (shell-command-to-string "michel-orgmode --sync --orgfile ~/.emacs.d/tasks.org")
+  (revert-buffer t t))
+
+(defun tasks ()
+  (interactive)
+  (find-file "~/.emacs.d/tasks.org"))
 
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value."
@@ -87,9 +132,6 @@
               (kill-new sprunge-link)
               (message "Sprunge complete: %s" sprunge-link)))))))
 
-(add-to-list 'load-path "~/.emacs.d/vendor/color-theme")
-(require 'color-theme)
-
 (add-to-list 'load-path "~/.emacs.d/vendor/web-mode")
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
@@ -117,10 +159,8 @@
 (add-to-list 'load-path "~/.emacs.d/vendor/dired-copy-paste")
 (require 'dired-copy-paste)
 
-(add-to-list 'load-path "~/.emacs.d/vendor/ESS/lisp")
-(require 'ess-site)
-
-(load-file "~/.emacs.d/vendor/rudel/rudel-loaddefs.el")
+(add-to-list 'load-path "~/.emacs.d/vendor/csv-mode")
+(require 'csv-mode)
 
 (add-to-list 'load-path "~/.emacs.d/vendor/emacs-calfw")
 (require 'calfw-org)
@@ -133,17 +173,13 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/vendor/emacs-eclim"))
 ;; only add the vendor path when you want to use the libraries provided with emacs-eclim
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/vendor/emacs-eclim/vendor"))
+
 (require 'eclim)
 
 (setq eclim-auto-save t)
 (global-eclim-mode)
 
 (require 'eclimd)
-
-; Path
-(add-to-list 'load-path "~/.emacs.d/vendor/exec-path-from-shell")
-(require 'exec-path-from-shell)
-(exec-path-from-shell-initialize)
 
 ; Parenthesis!
 (add-to-list 'load-path "~/.emacs.d/vendor/parenthesis")
@@ -170,10 +206,6 @@
 ; Gnuplot
 (autoload 'gnuplot-mode "gnuplot")
 (add-to-list 'auto-mode-alist '("\\.gp\\'" . gnuplot-mode))
-
-;; Matlab mode
-(add-to-list 'load-path "~/.emacs.d/vendor/matlab-emacs")
-(load-library "matlab-load")
 
 ;; C# mode
 (add-to-list 'load-path "~/.emacs.d/vendor/csharp-mode")
@@ -210,14 +242,17 @@
 ; Enable X clipboard
 (setq x-select-enable-clipboard t)
 
+;; Dropdown-list
+(add-to-list 'load-path "~/.emacs.d/vendor/dropdown-list")
+(require 'dropdown-list)
+
 ; YAsnippet
 (add-to-list 'load-path "~/.emacs.d/vendor/yasnippet")
 (require 'yasnippet)
 (yas-global-mode 1)
-(yas/load-directory "~/.emacs.d/snippets")
-(yas/load-directory "~/.emacs.d/vendor/emacs-java/snippets")
-
-
+(setq yas-prompt-functions '(yas-dropdown-prompt
+                             yas-ido-prompt
+                             yas-completing-prompt))
 ;; Autopair
 (add-to-list 'load-path "~/.emacs.d/vendor/autopair")
 (require 'autopair)
@@ -230,18 +265,11 @@
 (require 'sage-mode)
 (setq sage-command "/opt/sage/sage")
 
-
-; emacs-java
-(add-to-list 'load-path "~/.emacs.d/vendor/emacs-java")
-(require 'java-mode-plus)
-(require 'java-docs)
-(java-docs "/usr/share/doc/openjdk7-doc")
-
 ;; Zenburn MOTHAFUCKA!
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/zenburn-emacs")
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized-emacs")
-(add-to-list 'load-path "~/.emacs.d/themes/solarized-emacs")
-(load-theme 'zenburn t)
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/zenburn-emacs")
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized-emacs")
+;; (add-to-list 'load-path "~/.emacs.d/themes/solarized-emacs")
+;; (load-theme 'zenburn t)
 
 ; Enable Solarized dark
 (add-to-list 'load-path "~/.emacs.d/themes/solarized-emacs")
@@ -274,12 +302,6 @@
 (require 'magit)
 (add-to-list 'load-path "~/.emacs.d/vendor/magit-clone")
 (require 'magit-clone)
-
-; Dirtree
-(add-to-list 'load-path "~/.emacs.d/vendor/emacs-dirtree")
-(require 'windata)
-(require 'tree-mode)
-(require 'dirtree)
 
 ; Android
 (add-to-list 'load-path "~/.emacs.d/vendor/android")
@@ -340,6 +362,7 @@
 ; Smooth scrolling
 (add-to-list 'load-path "~/.emacs.d/vendor/smooth-scrolling")
 (require 'smooth-scrolling)
+(setq auto-window-vscroll nil)
 
 ; Fix for hard links.
 (setq backup-by-copying-when-linked t)
@@ -366,10 +389,13 @@
  '(custom-safe-themes
    (quote
     ("e3c85c5da800be5fe6c1cd0e7884031edf065e44e42aa07096aa26d117c28092" "baed08a10ff9393ce578c3ea3e8fd4f8c86e595463a882c55f3bd617df7e5a45" "0bac11bd6a3866c6dee5204f76908ec3bdef1e52f3c247d5ceca82860cccfa9d" default)))
- '(matlab-mode-install-path
-   (quote
-    ("/home/martinjlowm/matlab/toolbox/" "/home/martinjlowm/Dropbox/Kommunikationsteknologi")))
+ '(eclim-eclipse-dirs (quote ("/usr/share/eclipse/plugins/org.eclim_2.4.0")))
+ '(eclim-executable "/usr/share/eclipse/plugins/org.eclim_2.4.0/bin/eclim")
+ '(matlab-shell-command "/home/martinjlowm/matlab/bin/matlab")
+ '(mm-text-html-renderer (quote gnus-w3m))
  '(neo-banner-message "")
+ '(neo-header-height 0 t)
+ '(neo-tree-display-cur-dir nil)
  '(neo-window-width 35)
  '(vhdl-project-alist
    (quote
@@ -418,4 +444,55 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(variable-pitch ((t (:family "Droid Sans Mono")))))
+
+(add-to-list 'load-path "~/.emacs.d/vendor/color-theme")
+(require 'color-theme)
+(add-to-list 'load-path "~/.emacs.d/themes")
+(require 'color-theme-julie)
+(color-theme-julie)
+
+(add-to-list 'load-path "~/.emacs.d/vendor/matlab-emacs")
+(require 'matlab-load)
+
+;; FIXME: GPG temp fix
+;; (defun epg--list-keys-1 (context name mode)
+;;   (let ((args (append (if (epg-context-home-directory context)
+;; 			  (list "--homedir"
+;; 				(epg-context-home-directory context)))
+;; 		      '("--with-colons" "--no-greeting" "--batch"
+;; 			"--with-fingerprint" "--with-fingerprint")
+;; 		      (unless (eq (epg-context-protocol context) 'CMS)
+;; 			'("--fixed-list-mode"))))
+;; 	(list-keys-option (if (memq mode '(t secret))
+;; 			      "--list-secret-keys"
+;; 			    (if (memq mode '(nil public))
+;; 				"--list-keys"
+;; 			      "--list-sigs")))
+;; 	(coding-system-for-read 'binary)
+;; 	keys string field index)
+;;     (if name
+;; 	(progn
+;; 	  (unless (listp name)
+;; 	    (setq name (list name)))
+;; 	  (while name
+;; 	    (setq args (append args (list list-keys-option (car name)))
+;; 		  name (cdr name))))
+;;       (setq args (append args (list list-keys-option))))
+;;     (with-temp-buffer
+;;       (apply #'call-process
+;; 	     (epg-context-program context)
+;; 	     nil (list t nil) nil args)
+;;       (goto-char (point-min))
+;;       (while (re-search-forward "^[a-z][a-z][a-z]:.*" nil t)
+;; 	(setq keys (cons (make-vector 15 nil) keys)
+;; 	      string (match-string 0)
+;; 	      index 0
+;; 	      field 0)
+;; 	(while (and (< field (length (car keys)))
+;; 		    (eq index
+;; 			(string-match "\\([^:]+\\)?:" string index)))
+;; 	  (setq index (match-end 0))
+;; 	  (aset (car keys) field (match-string 1 string))
+;; 	  (setq field (1+ field))))
+;;       (nreverse keys))))

@@ -1,0 +1,14 @@
+Reformat code to be consistent.
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Thu Jan 8 13:59:07 2015 +0100
+#
+# rebase in progress; onto cc4d295
+# You are currently editing a commit while rebasing branch '2_25-branch' on 'cc4d295'.
+#
+# Changes to be committed:
+#	modified:   gas/config/tc-tinuso.c
+#	modified:   gas/config/tc-tinuso.h
+#

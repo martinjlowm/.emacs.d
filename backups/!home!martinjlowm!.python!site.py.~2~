@@ -1,3 +1,0 @@
-import sys, os
-#insert the following line
-sys.setdefaultencoding('utf-8')

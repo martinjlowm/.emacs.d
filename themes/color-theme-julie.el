@@ -102,6 +102,11 @@
      (julie-warning-face ((t (:foreground ,julie-yellow-1 :weight bold :underline t))))
      (julie-error-face ((t (:foreground ,julie-red-1 :weight bold :underline t))))
 
+     ;; Neotree
+     (neo-dir-link-face ((t (:foreground ,julie-yellow :weight bold))))
+     (neo-expand-btn-face ((t (:foreground ,julie-yellow :weight bold))))
+     (neo-file-link-face ((t (:foreground ,julie-fg))))
+
      ;;; custom faces
      (linum ((t (:foreground "#505050" :background ,julie-bg :weight normal))))
      (tooltip ((t (:foreground ,julie-bg :background ,julie-fg))))

@@ -1,0 +1,16 @@
+function idComplete = removeIncomplete(id)
+for i = 1:length(id)
+    experimentId = floor(id(i));
+    incomplete = 0;
+    for j = 1:3
+        if id(id == experimentId + j / 10)
+
+        else
+            incomplete = 1;
+        end
+    end
+    if incomplete
+
+    end
+end
+end

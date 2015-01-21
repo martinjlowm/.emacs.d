@@ -1,8 +1,0 @@
-set key outside
-set key center top
-set key spacing 2
-set xlabel "FTP download response time (s)"
-set ylabel "Cumulative density"
-set grid
-set datafile sep','
-plot 'data/iub/last.csv' using 1:2 with lines title 'Baseline -- All UE-nodes'

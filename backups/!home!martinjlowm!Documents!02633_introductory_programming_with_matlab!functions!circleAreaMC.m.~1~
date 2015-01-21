@@ -1,0 +1,15 @@
+function A = circleAreaMC(xvals, yvals)
+ASquare = 4;
+N = min(length(xvals), length(yvals))
+n = 0
+
+for i = 1:N
+    magnitude = norm(xvals(i), yvals(i));
+
+    if magnitude < 1
+        n = n + 1;
+    end
+end
+
+A = ASquare + n / N;
+end

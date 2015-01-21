@@ -1,0 +1,3 @@
+function E = computeLanguageError(freq)
+text = fscanf(fopen(filename, 'r'), '%c,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f')
+end

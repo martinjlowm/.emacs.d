@@ -1,0 +1,18 @@
+function t = thermoEquilibrium(N, r)
+t = 1;
+NR = 0;
+NL = N;
+while ~(NL == NR) && t < length(r)
+    pLR = NL/N;
+    pRL = 1 - pLR;
+    if r(t) <= pLR
+        NL = NL - 1;
+        NR = NR + 1;
+    else
+        NL = NL + 1;
+        NR = NR - 1;
+    end
+
+    t = t + 1;
+end
+end

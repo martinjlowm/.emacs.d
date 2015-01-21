@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ pidof emacsclient ]; then
+    echo "Use existing frame"
+    # emacsclient -n -a "" "$@"
+else
+    echo "Open new frame"
+    emacsclient -c -n -a "" "$@"
+fi

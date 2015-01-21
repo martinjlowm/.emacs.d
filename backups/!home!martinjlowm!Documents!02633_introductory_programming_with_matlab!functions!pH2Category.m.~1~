@@ -1,0 +1,14 @@
+function category = pH2Category(pH)
+category = '';
+if pH >= 0 && pH <= 2
+    category = 'Strongly acidic';
+elseif pH >= 3 && pH <= 5
+    category = 'Weakly acidic';
+elseif pH >= 6 && pH <= 8
+    category = 'Neutral';
+elseif pH >= 9 && pH <= 11
+    category = 'Weakly basic';
+elseif pH >= 12
+    category = 'Strongly basic';
+end
+end

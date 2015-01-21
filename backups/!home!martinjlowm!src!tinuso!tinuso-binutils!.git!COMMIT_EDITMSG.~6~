@@ -1,0 +1,10 @@
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch 2_25-branch
+# Your branch is ahead of 'upstream/binutils-2_25-branch' by 18 commits.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	modified:   bfd/elf32-tinuso.c
+#

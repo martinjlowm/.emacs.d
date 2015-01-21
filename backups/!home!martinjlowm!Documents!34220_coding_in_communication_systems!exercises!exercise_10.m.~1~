@@ -1,0 +1,6 @@
+% a)
+name = 'MARTIN';
+Alfabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ ';
+for i = 1:length(name)
+    find(Alfabet == name(i))
+end

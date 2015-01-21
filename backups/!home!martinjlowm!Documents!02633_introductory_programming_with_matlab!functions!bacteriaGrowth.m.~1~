@@ -1,0 +1,2 @@
+function tN = bacteriaGrowth(n0, alpha, K, N)
+end

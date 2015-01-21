@@ -3,5 +3,5 @@
 # with '#' will be ignored, and an empty message aborts the commit.
 # On branch md_cleanup
 # Changes to be committed:
-#	modified:   gcc/config/tinuso/constraints.md
+#	modified:   gcc/config/tinuso/tinuso.md
 #

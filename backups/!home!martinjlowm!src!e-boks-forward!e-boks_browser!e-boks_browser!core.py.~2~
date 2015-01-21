@@ -1,0 +1,3 @@
+
+def main(args=sys.argv[1:], env=Environment()):
+    # args = decode_args(args, env.stdin_encoding)

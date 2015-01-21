@@ -1,0 +1,50 @@
+function gradesPlot(grades)
+% GRADESPLOT  Display a plot of N x M students/assignments matrix.
+%   GRADESPLOT(GRADES) displays a plot of grades given to N
+%   students in M assignments.
+
+[N, M] = size(grades);
+
+% Get the size of the screen to determine how the figure should be
+% scaled.
+screenSize = get(groot, 'ScreenSize');
+
+figure('name', ['Plots of students'' grades in ' M ' assignments'], ...
+       'NumberTitle', 'off', 'Position', ...
+       [screenSize(3) / 5, screenSize(4) / 4, ...
+        screenSize(3) * (2 / 3), screenSize(4) / 2])
+
+subplot(1, 2, 1);
+bar([SE, VC, L, BT]);
+title('Bar chart showing the number of different types of bacteria');
+set(gca,'XTickLabel',{'SE', 'VC', 'L', 'BT'})
+
+%Growth rate by temperature
+
+SE = data(find(data(:,3)==1),:); %Create matrix of SE data
+[d1,d2] = sort(SE(:,1)); %Sort temperatures
+SE = SE(d2,:); %Rearrange matrix according to sorting
+
+VC = data(find(data(:,3)==2),:); %Create matrix of SE data
+[d1,d2] = sort(VC(:,1)); %Sort temperatures
+VC = VC(d2,:); %Rearrange matrix according to sorting
+
+L = data(find(data(:,3)==3),:); %Create matrix of SE data
+[d1,d2] = sort(L(:,1)); %Sort temperatures
+L = L(d2,:); %Rearrange matrix according to sorting
+
+BT = data(find(data(:,3)==4),:); %Create matrix of SE data
+[d1,d2] = sort(BT(:,1)); %Sort temperatures
+BT = BT(d2,:); %Rearrange matrix according to sorting
+
+subplot(1,2,2);
+hold on
+plot(SE(:,1),SE(:,2));
+plot(VC(:,1),VC(:,2),'m');
+plot(L(:,1),L(:,2),'g');
+plot(BT(:,1),BT(:,2),'r');
+hold off
+legend('SE','VC','L','BT');
+xlim([10,60]);
+title('Growth rate by temperature');
+end

@@ -1,0 +1,9 @@
+function g = gravitationalPull(x)
+g_0 = 9.82;
+R = 6.371*10^6;
+if R <= x
+    g = g_0 * ((R^2) / (x^2))
+elseif x <= 0 && x < R
+    g = g_0 * ((x) / (R))
+end
+end

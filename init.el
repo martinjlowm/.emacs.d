@@ -1,3 +1,4 @@
+(require 'cl)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 (scroll-bar-mode 0)
@@ -10,23 +11,26 @@
       '(nnimap "gmail"
 	       (nnimap-address "imap.gmail.com")
 	       (nnimap-server-port 993)
-	       (nnimap-stream ssl)))
+	       (nnimap-stream ssl)
+               (nnimap-authenticator login)))
 
-(setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-      smtpmail-auth-credentials '(("smtp.gmail.com" 587
-				   "martin@martinjlowm.dk" nil))
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 587
-      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
-(setq smtpmail-auth-credentials "~/.mailauth.gpg")
-(setq message-citation-line-function 'message-insert-formatted-citation-line)
-(setq message-citation-line-format "\n\nOn %a, %b %d %Y, %f wrote:")
-;; (gnus-demon-add-handler 'gnus-demon-scan-news 2 t)
-(setq gnus-signature-file "~/.signature")
-(setq user-mail-address "martin@martinjlowm.dk")
+;; (setq message-send-mail-function 'smtpmail-send-it
+;;       smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+;;       smtpmail-auth-credentials '(("smtp.gmail.com" 587
+;; 				   "martin@martinjlowm.dk" nil))
+;;       smtpmail-default-smtp-server "smtp.gmail.com"
+;;       smtpmail-smtp-server "smtp.gmail.com"
+;;       smtpmail-smtp-service 587
+;;       gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
+;; (setq message-citation-line-function 'message-insert-formatted-citation-line)
+;; (setq message-citation-line-format "\n\nOn %a, %b %d %Y, %f wrote:")
+;; ;; (gnus-demon-add-handler 'gnus-demon-scan-news 2 t)
+;; (setq gnus-signature-file "~/.signature")
+;; (setq user-mail-address "martin@martinjlowm.dk")
 
+;; (require 'bbdb)
+;; (bbdb-initialize 'gnus 'message)
+;; (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
 
 (setq tramp-shell-prompt-pattern "^[^$>\n]*[#$%>] *\\(\[[0-9;]*[a-zA-Z] *\\)*")
 (global-unset-key (kbd "C-z"))
@@ -55,22 +59,29 @@
 
 (setq set-fill-column 72)
 
-(load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
+;; (load "auctex.el" nil t t)
+;; (load "preview-latex.el" nil t t)
 
-(defun run-arara ()
-  (interactive)
-  (message (shell-command-to-string (concat "arara " (buffer-file-name)))))
+;; (defun run-arara ()
+;;   (interactive)
+;;   (message (shell-command-to-string (concat "arara " (buffer-file-name)))))
 
-(add-hook 'TeX-mode-hook (lambda ()
-                           (TeX-PDF-mode t)
-                           (setq TeX-view-program-selection (quote
-                                                             (((output-dvi style-pstricks)
-                                                               "dvips and gv")
-                                                              (output-dvi "xdvi")
-                                                              (output-pdf "xdg-open")
-                                                              (output-html "xdg-open"))))
-                           (define-key LaTeX-mode-map (kbd "C-c C-c") 'run-arara)))
+(add-hook 'LaTeX-mode-hook (lambda ()
+  (push
+    '("LaTeXmk" "latexmk -lualatex -c %t" TeX-run-TeX nil t
+      :help "Run Latexmk on file")
+    TeX-command-list)
+  (setq TeX-command-default "LaTeXmk")))
+
+;; (add-hook 'TeX-mode-hook (lambda ()
+;;                            (TeX-PDF-mode t)
+;;                            (setq TeX-view-program-selection (quote
+;;                                                              (((output-dvi style-pstricks)
+;;                                                                "dvips and gv")
+;;                                                               (output-dvi "xdvi")
+;;                                                               (output-pdf "xdg-open")
+;;                                                               (output-html "xdg-open"))))
+;;                            (define-key LaTeX-mode-map (kbd "C-c C-c") 'run-arara)))
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       backup-by-copying t    ; Don't delink hardlinks
@@ -128,12 +139,6 @@
               (kill-new sprunge-link)
               (message "Sprunge complete: %s" sprunge-link)))))))
 
-(add-to-list 'load-path "~/.emacs.d/vendor/color-theme")
-(require 'color-theme)
-(add-to-list 'load-path "~/.emacs.d/themes")
-(require 'color-theme-julie)
-(color-theme-julie)
-
 (add-to-list 'load-path "~/.emacs.d/vendor/web-mode")
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
@@ -175,6 +180,7 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/vendor/emacs-eclim"))
 ;; only add the vendor path when you want to use the libraries provided with emacs-eclim
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/vendor/emacs-eclim/vendor"))
+
 (require 'eclim)
 
 (setq eclim-auto-save t)
@@ -381,6 +387,12 @@
 
 (put 'ido-exit-minibuffer 'disabled nil)
 
+(add-to-list 'load-path "~/.emacs.d/vendor/matlab-emacs")
+(load-library "matlab-load")
+(add-hook 'matlab-mode
+          (lambda ()
+            (local-set-key (kbd "<up>") 'previous-line)
+            (local-set-key (kbd "<down>") 'next-line)))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -390,13 +402,14 @@
  '(custom-safe-themes
    (quote
     ("e3c85c5da800be5fe6c1cd0e7884031edf065e44e42aa07096aa26d117c28092" "baed08a10ff9393ce578c3ea3e8fd4f8c86e595463a882c55f3bd617df7e5a45" "0bac11bd6a3866c6dee5204f76908ec3bdef1e52f3c247d5ceca82860cccfa9d" default)))
- '(matlab-mode-install-path
-   (quote
-    ("/home/martinjlowm/matlab/toolbox/" "/home/martinjlowm/Dropbox/Kommunikationsteknologi")))
+ '(eclim-eclipse-dirs (quote ("/usr/share/eclipse/plugins/org.eclim_2.4.0")))
+ '(eclim-executable "/usr/share/eclipse/plugins/org.eclim_2.4.0/bin/eclim")
+ '(matlab-shell-command "/Applications/MATLAB_R2014a.app/bin/matlab")
  '(mm-text-html-renderer (quote gnus-w3m))
  '(neo-banner-message "")
+ '(neo-header-height 0 t)
+ '(neo-tree-display-cur-dir nil)
  '(neo-window-width 35)
- '(neo-header-height 0)
  '(vhdl-project-alist
    (quote
     (("digital_electronics_lab_2" "VHDL laboratory exercise" "~/Documents/02138_digital_electronics_1/projects/lab_2/"
@@ -444,4 +457,78 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(variable-pitch ((t (:family "Droid Sans Mono")))))
+ '(fixed-pitch ((t (:height 75 :family "Monaco"))))
+ '(variable-pitch ((t (:family "Monaco")))))
+
+(defun what-face (pos)
+  (interactive "d")
+  (let ((face (or (get-char-property (point) 'read-face-name)
+                  (get-char-property (point) 'face))))
+    (if face (message "Face: %s" face) (message "No face at %d" pos))))
+
+(add-to-list 'load-path "~/.emacs.d/vendor/color-theme")
+(require 'color-theme)
+(add-to-list 'load-path "~/.emacs.d/themes")
+(require 'color-theme-julie)
+(color-theme-julie)
+
+(when (eq system-type 'darwin) ;; mac specific settings
+  (setq mac-option-modifier 'alt)
+  (setq mac-command-modifier 'meta)
+  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+  (global-set-key (kbd "<C-prior>") 'backward-paragraph)
+  (global-set-key (kbd "<C-next>") 'forward-paragraph)
+  (global-set-key (kbd "<C-home>") 'backward-word)
+  (global-set-key (kbd "<C-end>") 'forward-word)
+  (global-set-key (kbd "<C-delete>") 'backward-kill-word)
+  (setq ns-alternate-modifier nil)
+  )
+
+(add-to-list 'load-path "~/.emacs.d/vendor/emacs-gradle-mode")
+(require 'gradle-mode)
+(gradle-mode 1)
+
+(add-to-list 'load-path "~/.emacs.d/vendor/groovy-emacs-modes")
+(require 'groovy-mode)
+
+;; FIXME: GPG temp fix
+;; (defun epg--list-keys-1 (context name mode)
+;;   (let ((args (append (if (epg-context-home-directory context)
+;; 			  (list "--homedir"
+;; 				(epg-context-home-directory context)))
+;; 		      '("--with-colons" "--no-greeting" "--batch"
+;; 			"--with-fingerprint" "--with-fingerprint")
+;; 		      (unless (eq (epg-context-protocol context) 'CMS)
+;; 			'("--fixed-list-mode"))))
+;; 	(list-keys-option (if (memq mode '(t secret))
+;; 			      "--list-secret-keys"
+;; 			    (if (memq mode '(nil public))
+;; 				"--list-keys"
+;; 			      "--list-sigs")))
+;; 	(coding-system-for-read 'binary)
+;; 	keys string field index)
+;;     (if name
+;; 	(progn
+;; 	  (unless (listp name)
+;; 	    (setq name (list name)))
+;; 	  (while name
+;; 	    (setq args (append args (list list-keys-option (car name)))
+;; 		  name (cdr name))))
+;;       (setq args (append args (list list-keys-option))))
+;;     (with-temp-buffer
+;;       (apply #'call-process
+;; 	     (epg-context-program context)
+;; 	     nil (list t nil) nil args)
+;;       (goto-char (point-min))
+;;       (while (re-search-forward "^[a-z][a-z][a-z]:.*" nil t)
+;; 	(setq keys (cons (make-vector 15 nil) keys)
+;; 	      string (match-string 0)
+;; 	      index 0
+;; 	      field 0)
+;; 	(while (and (< field (length (car keys)))
+;; 		    (eq index
+;; 			(string-match "\\([^:]+\\)?:" string index)))
+;; 	  (setq index (match-end 0))
+;; 	  (aset (car keys) field (match-string 1 string))
+;; 	  (setq field (1+ field))))
+;;       (nreverse keys))))
