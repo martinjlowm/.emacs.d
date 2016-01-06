@@ -8,3 +8,5 @@ recentf
 tramp
 *conflicted
 *.eld
+.bzr/
+.hg/

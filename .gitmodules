@@ -268,3 +268,7 @@
 [submodule "rainbow-mode"]
 	path = vendor/rainbow-mode
 	url = git@github.com:emacsmirror/rainbow-mode.git
+
+[submodule "wpcs"]
+	path = vendor/wpcs
+	url = git@github.com:WordPress-Coding-Standards/WordPress-Coding-Standards.git
