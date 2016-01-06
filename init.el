@@ -438,8 +438,6 @@
 ;; Magit
 (add-to-list 'load-path "~/.emacs.d/vendor/dash.el")
 (require 'dash)
-(add-to-list 'load-path "~/.emacs.d/vendor/git-modes")
-(require 'git-commit-mode)
 (add-to-list 'load-path "~/.emacs.d/vendor/magit/lisp")
 (require 'magit)
 (add-to-list 'load-path "~/.emacs.d/vendor/magit-clone")

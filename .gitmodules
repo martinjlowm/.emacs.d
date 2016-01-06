@@ -73,11 +73,6 @@
 	url = git://github.com/magnars/expand-region.el.git
         branch = master
 
-[submodule "git-modes"]
-        path = vendor/git-modes
-	url = git@github.com:magit/git-modes.git
-        branch = master
-
 [submodule "js2-mode"]
         path = vendor/js2-mode
 	url = git://github.com/mooz/js2-mode.git
