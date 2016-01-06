@@ -3058,7 +3058,7 @@ outer indentation in case of a commented line.  The symbols
 				 "\\)"))
 	     ;; Items.
 	     (+ (LaTeX-indent-calculate-last force-type) LaTeX-item-indent))
-	    ((looking-at "}")
+	    ((looking-at "}\\|]")
 	     ;; End brace in the start of the line.
 	     (- (LaTeX-indent-calculate-last force-type)
 		TeX-brace-indent-level))
@@ -3091,6 +3091,25 @@ outer indentation in case of a commented line.  The symbols
 	   ((looking-at (regexp-quote TeX-esc))
 	    (forward-char 1))))
 	count))))
+
+(defun LaTeX-brace-count-line ()
+  "Count number of open/closed braces."
+  (save-excursion
+    (let ((count 0) (limit (line-end-position)) char)
+      (while (progn
+	       (skip-chars-forward "^{}[]\\\\" limit)
+	       (when (and (< (point) limit) (not (TeX-in-comment)))
+		 (setq char (char-after))
+		 (forward-char)
+		 (cond ((or (eq char ?\{) (eq char ?\[))
+			(setq count (+ count TeX-brace-indent-level)))
+		       ((or (eq char ?\}) (eq char ?\]))
+                          (setq count (- count TeX-brace-indent-level)))
+		       ((eq char ?\\)
+			(when (< (point) limit)
+			  (forward-char)
+			  t))))))
+      count)))
 
 (defun LaTeX-indent-calculate-last (&optional force-type)
   "Return the correct indentation of a normal line of text.
@@ -3150,7 +3169,7 @@ outer indentation in case of a commented line.  The symbols
 	   (+ (LaTeX-current-indentation force-type)
 	      ;; Some people have opening braces at the end of the
 	      ;; line, e.g. in case of `\begin{letter}{%'.
-	      (TeX-brace-count-line)))
+	      (LaTeX-brace-count-line)))
 	  ((and (eq major-mode 'doctex-mode)
 		(looking-at (concat (regexp-quote TeX-esc)
 				    "end[ \t]*{macrocode\\*?}"))
@@ -3182,7 +3201,7 @@ outer indentation in case of a commented line.  The symbols
 			      (eq force-type 'outer)
 			      (TeX-in-commented-line)))
 		    (+ (LaTeX-indent-level-count)
-		       (TeX-brace-count-line))
+		       (LaTeX-brace-count-line))
 		  0)
 		(cond ((looking-at (concat (regexp-quote TeX-esc)
 					   "\\("
@@ -3197,7 +3216,7 @@ outer indentation in case of a commented line.  The symbols
 					   LaTeX-item-regexp
 					   "\\)"))
 		       (- LaTeX-item-indent))
-		      ((looking-at "}")
+		      ((looking-at "}\\|]")
 		       TeX-brace-indent-level)
 		      (t 0)))))))
 

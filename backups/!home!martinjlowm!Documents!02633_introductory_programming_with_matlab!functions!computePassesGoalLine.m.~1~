@@ -1,5 +1,0 @@
-function score = computePassesGoalLine(point, directionVector)
-[x, y] = point
-
-score = '';
-end

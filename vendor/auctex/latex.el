@@ -2130,6 +2130,11 @@ consideration just as is in the non-commented source code."
   :group 'LaTeX-indentation
   :type 'integer)
 
+(defcustom LaTeX-brace-indent-level 2
+  "*The level of indentation produced by an open brace."
+  :group 'LaTeX-indentation
+  :type 'integer)
+
 (defcustom LaTeX-item-indent (- LaTeX-indent-level)
   "*Extra indentation for lines beginning with an item."
   :group 'LaTeX-indentation
@@ -2367,10 +2372,10 @@ outer indentation in case of a commented line.  The symbols
 				 "\\)"))
 	     ;; Items.
 	     (+ (LaTeX-indent-calculate-last force-type) LaTeX-item-indent))
-	    ((looking-at "}")
+	    ((looking-at "}\\|]")
 	     ;; End brace in the start of the line.
-	     (- (LaTeX-indent-calculate-last force-type)
-		TeX-brace-indent-level))
+             (- (LaTeX-indent-calculate-last force-type)
+                  TeX-brace-indent-level))
 	    (t (LaTeX-indent-calculate-last force-type))))))
 
 (defun LaTeX-indent-level-count ()
@@ -2400,6 +2405,26 @@ outer indentation in case of a commented line.  The symbols
 	   ((looking-at (regexp-quote TeX-esc))
 	    (forward-char 1))))
 	count))))
+
+(defun LaTeX-brace-count-line ()
+  "Count number of open/closed braces."
+  (save-excursion
+    (let ((count 0) (limit (line-end-position)) char)
+      (while (progn
+	       (skip-chars-forward "^{}[]\\\\" limit)
+	       (when (and (< (point) limit) (not (TeX-in-comment)))
+		 (setq char (char-after))
+		 (forward-char)
+		 (cond ((or (eq char ?\{) (eq char ?\[))
+			(setq count (+ count LaTeX-brace-indent-level)))
+		       ((or (eq char ?\}) (eq char ?\]))
+                          (setq count (- count LaTeX-brace-indent-level)))
+		       ((eq char ?\\)
+			(when (< (point) limit)
+			  (forward-char)
+			  t))))))
+      count)))
+
 
 (defun LaTeX-indent-calculate-last (&optional force-type)
   "Return the correct indentation of a normal line of text.
@@ -2459,7 +2484,7 @@ outer indentation in case of a commented line.  The symbols
 	   (+ (LaTeX-current-indentation force-type)
 	      ;; Some people have opening braces at the end of the
 	      ;; line, e.g. in case of `\begin{letter}{%'.
-	      (TeX-brace-count-line)))
+	      (LaTeX-brace-count-line)))
 	  ((and (eq major-mode 'doctex-mode)
 		(looking-at (concat (regexp-quote TeX-esc)
 				    "end[ \t]*{macrocode\\*?}"))
@@ -2490,10 +2515,13 @@ outer indentation in case of a commented line.  The symbols
 		(if (not (and force-type
 			      (eq force-type 'outer)
 			      (TeX-in-commented-line)))
+                    (progn
+                      (message "" (LaTeX-indent-level-count))
+                      (message "" (LaTeX-brace-count-line))
 		    (+ (LaTeX-indent-level-count)
-		       (TeX-brace-count-line))
+		       (LaTeX-brace-count-line)))
 		  0)
-		(cond ((looking-at (concat (regexp-quote TeX-esc)
+                (cond ((looking-at (concat (regexp-quote TeX-esc)
 					   "\\("
 					   LaTeX-end-regexp
 					   "\\)"))
@@ -2506,7 +2534,7 @@ outer indentation in case of a commented line.  The symbols
 					   LaTeX-item-regexp
 					   "\\)"))
 		       (- LaTeX-item-indent))
-		      ((looking-at "}")
+		      ((looking-at "}\\|]")
 		       TeX-brace-indent-level)
 		      (t 0)))))))
 

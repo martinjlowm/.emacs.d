@@ -1,6 +1,0 @@
-a = "<a id=\"video-high\" href=\"http://v-cdn-r.lubetube.com/mp4/realwifestories/realwifestories_737/realwifestories_737_600_64_640x360_high.mp4?ir=13200000000&amp;int=60s&amp;sr=7200000000&amp;nva=20141212144108&amp;nvb=20141212124108&amp;hash=076020a7c06871228d5f6\" data-content-type=\"video/mp4\" data-type=\"mp4\"></a>"
-
-results = re.compile('video-(hd|standard|high)" href="([^"]+)" data').findall(a)
-
-for url in results:
-  print(url)

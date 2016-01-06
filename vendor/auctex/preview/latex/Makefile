@@ -22,18 +22,18 @@
 # MA 02110-1301, USA.
 
 
-LATEX=/usr/bin/latex
-PDFLATEX=/usr/bin/pdflatex
-TEX=/usr/bin/tex
-TEXHASH=/usr/bin/texhash
+LATEX=/usr/texbin/latex
+PDFLATEX=/usr/texbin/pdflatex
+TEX=/usr/texbin/tex
+TEXHASH=/usr/texbin/texhash
 
 prefix=/usr/local$(null)
 datarootdir=${prefix}/share$(null)
 datadir=${datarootdir}$(null)
 exec_prefix=${prefix}$(null)
 libdir=${exec_prefix}/lib$(null)
-previewtexmfdir = /usr/share/texmf/tex/latex/preview$(null)
-previewdocdir = /usr/share/texmf/doc/latex/styles$(null)
+previewtexmfdir = /Users/martinjlowm/texmf/tex/latex/preview$(null)
+previewdocdir = /Users/martinjlowm/texmf/doc/latex/styles$(null)
 TEXMFGEN = preview.sty prauctex.def prauctex.cfg prshowbox.def prshowlabels.def prtracingall.def prtightpage.def prlyx.def prcounters.def prfootnotes.def
 
 DESTDIR=

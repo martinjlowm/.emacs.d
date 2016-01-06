@@ -5,6 +5,7 @@ one of them, but don't find your name listed --in
 alphabetical order-- below, please write to developers
 at python-mode@python.org.
 
+Aaron Culich <aculich@gmail.com>
 Alexander Boettcher <alexander_boettcher@web.de>
 Andrea Crotti <andrea.crotti.0@gmail.com>
 Andreas Röhler http://launchpad.net/s-x-emacs-werkstatt/
@@ -25,10 +26,12 @@ Dan Nicolaescu  <dann@ics.uci.edu>
 Dave Love http://www.loveshack.ukfsn.org/emacs/
 David Cagle <david_cagle@microvision.com>
 David Poole <poole@cs.ubc.ca>
+David Reitter <david.Reitter@gmail.com>
 Don Bennett <dpb@donbennett.org>
 Drew Adams <drew.adams@oracle.com>
 Ed Loper
 Ed McCardell <edmccard@verizon.net>
+Eric Hanchrow <eric.hanchrow@gmail.com>
 Eric S. Johansson <esj@harvee.org>
 Erik Allik <eallik@gmail.com>
 Fabián Ezequiel Gallina http://github.com/fgallina/python.el
@@ -40,11 +43,14 @@ Georg Brandl <georg@python.org>
 Glenn Linderman
 Glenn Morris  <rgm@gnu.org>
 James Jong <ribonucleico@gmail.com>
+James Troup <james.troup@ubuntu.com>
 Jean-Francois Caron <jfcaron@phas.ubc.ca>
 Jeff Dairiki <dairiki@dairiki.org>
 Jeffrey Spencer <jeffspencerd@gmail.com>
+Jesse Legg <jesse@jesselegg.com>
 Joao Tavora http://autopair.googlecode.com
 John Wiegley <johnw@newartisans.com>
+Jonathan Waltman <jonathan.waltman@gmail.com>
 Juan A Rodriquez <juant.rodri@yahoo.es>
 Juanma Barranquero  <lekktu@gmail.com>
 Kao Félix <kcfelix@gmail.com>
@@ -52,9 +58,12 @@ Keegan Carruthers-Smith http://people.cs.uct.ac.za/~ksmith/2011/better-python-fl
 Ken Manheimer  <ken.manheimer@gmail.com>
 Khaoz <giulianisanches@gmail.con>
 Kim F. Storm  <storm@cua.dk>
+Laimonas Vebra <laimonas.vebra@gmail.com>
 Lars Bungum
+Luis-Dominique Dubeau <ldd@lddubeau.com>
 Martin Rudalics  <rudalics@gmx.at>
 Matsui Tetsushi
+Matthew Willson <matthew.willson@gmail.com>
 Mike Mazurek <mike.mazurek@gmail.com>
 Miles Bader  <miles@gnu.org>
 Nathan R. Yergler <nathan@yergler.net>
@@ -63,6 +72,7 @@ Nick Roberts  <nickrob@snap.net.nz>
 Nikolaj Schumacher http://nschum.de/src/emacs/company/
 Patrik Jonsson <code@familjenjonsson.org> 
 Paul Pogonyshev <pogonyshev@gmail.com>
+Phil Rufflewind <rf@rufflewind.com>
 Reinout van Rees http://reinout.vanrees.org/weblog/2010/05/11/pep8-pyflakes-emacs.html
 Richard Everson <R.M.Everson@exeter.ac.uk>
 Richard Riley http://www.emacswiki.org/emacs/RichardRiley
@@ -88,5 +98,7 @@ Tom Roche <Tom_Roche@pobox.com>
 Tom Willemsen <tom@ryuslash.org>
 Urs Fleisch <urs.fleisch@gmail.com>
 Vinicius Jose Latorre  <viniciusjl@ig.com.br>
+Wilfred Hughes http://www.wilfred.me.uk
 William Xu <william.xwl@gmail.com>
+Yuri D'Elia <wavexx@thregr.org>
 Yuri Goncharov

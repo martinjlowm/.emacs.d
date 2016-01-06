@@ -128,11 +128,6 @@
 	url = git://github.com/antonj/scss-mode.git
 	branch = master
 
-[submodule "smex"]
-        path = vendor/smex
-	url = git://github.com/nonsequitur/smex.git
-        branch = master
-
 [submodule "s.el"]
         path = vendor/s.el
 	url = git@github.com:magnars/s.el.git
@@ -161,35 +156,115 @@
 [submodule "yasnippet"]
         path = vendor/yasnippet
 	url = git://github.com/capitaomorte/yasnippet.git
-        branch = master
 
 [submodule "zenburn-emacs"]
         path = themes/zenburn-emacs
 	url = git://github.com/bbatsov/zenburn-emacs.git
-        branch = master
 
 [submodule "yasnippets-latex"]
 	path = vendor/yasnippets-latex
         url = git@github.com:madsdk/yasnippets-latex.git
-        branch = master
+
 [submodule "dropdown-list"]
 	path = vendor/dropdown-list
 	url = git@github.com:martinjlowm/dropdown-list.git
-        branch = master
+
 [submodule "bbdb"]
 	path = vendor/bbdb
 	url = git://git.savannah.nongnu.org/bbdb.git
-	branch = master
+
 [submodule "matlab-emacs"]
 	path = vendor/matlab-emacs
 	url = git@github.com:jguenther/matlab-emacs.git
-	branch = master
+
 [submodule "vendor/emacs-gradle-mode"]
 	path = vendor/emacs-gradle-mode
 	url = git@github.com:jacobono/emacs-gradle-mode.git
+
 [submodule "vendor/groovy-emacs-modes"]
 	path = vendor/groovy-emacs-modes
 	url = git@github.com:Groovy-Emacs-Modes/groovy-emacs-modes.git
+
 [submodule "vendor/auctex-latexmk"]
 	path = vendor/auctex-latexmk
 	url = git@github.com:tom-tan/auctex-latexmk.git
+
+[submodule "flycheck-google-cpplint"]
+	path = vendor/flycheck-google-cpplint
+	url = git@github.com:martinjlowm/flycheck-google-cpplint.git
+
+[submodule "flycheck"]
+	path = vendor/flycheck
+	url = git@github.com:flycheck/flycheck.git
+
+[submodule "let-alist"]
+	path = vendor/let-alist
+	url = git@github.com:emacsmirror/let-alist.git
+
+[submodule "exec-path-from-shell"]
+	path = vendor/exec-path-from-shell
+	url = git@github.com:purcell/exec-path-from-shell.git
+
+[submodule "fic-mode"]
+	path = vendor/fic-mode
+	url = git@github.com:lewang/fic-mode.git
+
+[submodule "applescript-mode"]
+	path = vendor/applescript-mode
+	url = git@github.com:ieure/applescript-mode.git
+
+[submodule "cmake-mode"]
+	path = vendor/cmake-mode
+	url = git@github.com:roysc/cmake-mode.git
+
+[submodule "ediff-trees"]
+	path = vendor/ediff-trees
+	url = git@github.com:emacsmirror/ediff-trees.git
+
+[submodule "php-mode"]
+	path = vendor/php-mode
+	url = git@github.com:ejmr/php-mode.git
+
+[submodule "emacs-request"]
+	path = vendor/emacs-request
+	url = git@github.com:tkf/emacs-request.git
+
+[submodule "emacs-websocket"]
+	path = vendor/emacs-websocket
+	url = git@github.com:ahyatt/emacs-websocket.git
+
+[submodule "projectile"]
+	path = vendor/projectile
+	url = git@github.com:bbatsov/projectile.git
+
+[submodule "powerline"]
+	path = vendor/powerline
+	url = git@github.com:milkypostman/powerline.git
+
+[submodule "xub-mode"]
+	path = vendor/xub-mode.el
+	url = git@github.com:xahlee/xub-mode.el.git
+
+[submodule "helm"]
+	path = vendor/helm
+	url = git@github.com:emacs-helm/helm.git
+
+[submodule "emacs-async"]
+	path = vendor/emacs-async
+	url = https://github.com/jwiegley/emacs-async.git
+
+[submodule "helm-descbinds"]
+	path = vendor/helm-descbinds
+	url = git@github.com:emacs-helm/helm-descbinds.git
+
+[submodule "osx-keychain.el"]
+	path = vendor/osx-keychain.el
+	url = git@github.com:bakotaco/osx-keychain.el.git
+
+[submodule "weechat.el"]
+	path = vendor/weechat.el
+	url = git@github.com:the-kenny/weechat.el.git
+
+[submodule "rainbow-mode"]
+	path = vendor/rainbow-mode
+	url = git@github.com:emacsmirror/rainbow-mode.git

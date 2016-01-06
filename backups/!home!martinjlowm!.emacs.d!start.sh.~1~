@@ -1,8 +1,0 @@
-tempuid=$(id -u)
-temphost=$(hostname)
-if [ ! -e "/tmp/esrv$tempuid-$temphost" ]
-then
-    emacs &
-    while [ ! -e "/tmp/esrv$tempuid-$temphost" ] ; do sleep 1 ; done
-fi
-emacsclient "$@"

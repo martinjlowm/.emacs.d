@@ -18,7 +18,8 @@
        (require 'tex nil t)
        (require 'tex-buf nil t))
   (and (require 'org nil t)
-       (require 'org-latex nil t)))
+       (require 'org-latex nil t))
+  (require 'mmm-auto nil t))
 
 ;;;###autoload
 (defun sage-run-sagetex (name command file)
@@ -96,6 +97,20 @@ Currently only `org-latex-to-pdf-process' is affected."
 (eval-after-load 'tex '(sage-auctex-setup))
 ;;;###autoload
 (eval-after-load 'org-latex '(sage-org-latex-setup))
+
+;;; provide MMM (multiple major mode) support
+(eval-after-load 'mmm-auto
+  '(progn
+     (mmm-add-classes
+      '((sagetex
+	 :submode sage-mode
+	 :delimiter-mode nil
+	 :front "\\\\begin{sage\\(block\\|silent\\|verbatim\\|example\\|commandline\\)}"
+	 :back "\\\\end{sage~1}"
+	 :save-matches 1)))
+     (mmm-add-mode-ext-class nil "\\.tex\\'" 'sagetex)
+     (unless mmm-global-mode
+       (message "Multiple modes not enabled, please customize `mmm-global-mode' to enable."))))
 
 (provide 'sage-latex)
 

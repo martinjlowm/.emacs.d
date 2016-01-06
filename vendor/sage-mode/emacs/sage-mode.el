@@ -82,6 +82,7 @@
     (define-key map [(control c) (control j)] 'sage-send-doctest)
     (define-key map [(control c) (control t)] 'sage-test)
     (define-key map [(control c) (control b)] 'sage-build)
+    (define-key map [(control c) (control z)] 'run-sage)
     (define-key map [(control h) (control f)] 'ipython-describe-symbol)
     (define-key map [(control h) (control g)] 'sage-find-symbol-other-window)
 
@@ -141,7 +142,14 @@
 	 :visible (not sage-view-inline-output-enabled)]
 	["Disable Typeset Output" sage-view-disable-inline-output
 	 :help "Disable typesetting of output in the inferior Sage buffer."
-	 :visible sage-view-inline-output-enabled]))
+	 :visible sage-view-inline-output-enabled]
+	"-"
+	["Hide all backtraces" hs-hide-all
+	 :help "Hide all backtraces to reduce clutter"]
+	["Show all backtraces" hs-show-all
+	 :help "Show all backtraces"]
+	["Show current backtrace" hs-show-block
+	 :help "Show all backtraces"]))
     map)
   "Keymap for `inferior-sage-mode'.")
 
@@ -167,29 +175,48 @@
   ;; I type x? a lot
   (set 'comint-input-filter 'sage-input-filter)
 
+  ;; Old python.el doesn't define comment start, which then confuses up hs-minor-mode
+  (set (make-local-variable 'comment-start) "#")
   (make-local-variable 'compilation-error-regexp-alist)
   (make-local-variable 'compilation-error-regexp-alist-alist)
   (add-to-list 'compilation-error-regexp-alist-alist sage-test-compilation-regexp)
   (add-to-list 'compilation-error-regexp-alist 'sage-test-compilation)
   (add-to-list 'compilation-error-regexp-alist-alist sage-build-compilation-regexp)
   (add-to-list 'compilation-error-regexp-alist 'sage-build-compilation)
-
   (pcomplete-sage-setup)
 
   ;; The new python.el does things a little differently wrt prompts.
   ;; In particular it has debugger and normal operation separated.
   ;; If we don't set them correctly things like completion don't work.
   (with-no-warnings ;; They give warnings with old python.el
+    ;; Some similar prompt variables are set in the top level of
+    ;; sage-compat.el so that when inferior-python-mode is called it
+    ;; will have the right prompts
     (setq python-shell-prompt-regexp ">>> \\|\\(sage: \\)+")
     (setq python-shell-prompt-pdb-regexp "[(<]*[Ii]?[PpGg]db[>)]+ ")
+    (setq python-shell-prompt-block-regexp "\\.\\.\\.\\(\\.:\\)? ")
+    (python-shell-prompt-set-calculated-regexps)
 
     ;; Respect python-shell-enable-font-lock
     (when (or (not (boundp 'python-shell-enable-font-lock))
 	      python-shell-enable-font-lock)
       (sage-font-lock)))
-
+  ;; Hiding backtraces
+  (when (require 'hideshow nil t)
+    (add-to-list 'hs-special-modes-alist
+		 `(inferior-sage-mode "^--------+\n"
+				      ,inferior-sage-prompt
+				      ,comment-start
+				      sage-hs-forward-sexp
+				      nil))
+    (hs-minor-mode))
   (compilation-shell-minor-mode 1))
 
+(defun sage-hs-forward-sexp (&rest bob)
+  "Used for `hs-minor-mode' to fold backtraces."
+  (search-forward-regexp inferior-sage-prompt nil t)
+  (forward-line -1)
+  (end-of-line))
 
 (defun inferior-sage-wait-for-prompt ()
   "Wait until the Sage process is ready for input."
@@ -524,6 +551,7 @@ See variable `python-buffer'.  Starts a new process if necessary."
 	 (run-sage nil sage-command t)
 	 (python-proc))))
 
+
 ;; Use our version of python-proc (even though I have my doubts)
 ;; for the new fgallina python.el
 (defun python-shell-internal-get-or-create-process ()
@@ -706,8 +734,8 @@ The major entry points are:
 `sage', to spawn a new sage session.
 
 `sage-send-buffer', to send the current buffer to the inferior sage, using
-\"load\"; `sage-send-region', to send the current region to the inferior
-sage, using \"load\"; and `sage-send-doctest', to send the docstring point is
+\"%runfile\"; `sage-send-region', to send the current region to the inferior
+sage, using \"%runfile\"; and `sage-send-doctest', to send the docstring point is
 currently looking at to the inferior sage interactively.
 
 `sage-test', to execute \"sage -t\" and friends and parse the output
@@ -743,6 +771,9 @@ and restart a fresh inferior sage in an existing buffer.
   ;; It's only used to help get defaults in some cases
   (defvar python-source-modes nil))
 
+(defvar sage-load-file-command "%%runfile %s"
+  "Format string to make sage load a filename")
+
 (defun sage-quit-debugger ()
   "Quit debugger if looking at a debugger prompt."
   (when (sage-last-prompt-is-debugger)
@@ -762,7 +793,7 @@ Quits if `sage-quit-debugger-automatically' is non-nil or user requests quit."
 ;;;###autoload
 (defun sage-send-buffer ()
   "Send the current buffer to the inferior sage process.
-The buffer is loaded using sage's \"load\" command."
+The buffer is loaded using sage's \"%runfile\" command."
   (interactive)
   (sage-maybe-quit-debugger)
 
@@ -770,7 +801,7 @@ The buffer is loaded using sage's \"load\" command."
     ;; named file -- offer to save it, then send it
     (when (buffer-modified-p)
       (save-some-buffers))
-    (sage-send-command (format "load %s" (buffer-file-name)) t))
+    (sage-send-command (format sage-load-file-command (buffer-file-name)) t))
   (unless (buffer-file-name)
     ;; un-named buffer -- use sage-send-region
     (sage-send-region (point-min) (point-max)))
@@ -801,7 +832,7 @@ the region \"2\" does not print \"2\"."
   (sage-maybe-quit-debugger)
 
   (let* ((f (make-temp-file "sage" nil ".sage"))
-	 (command (format "load '%s' # loading region..." f))
+	 (command (format sage-load-file-command f))
 	 (orig-start (copy-marker start)))
     (when (save-excursion
 	    (goto-char start)

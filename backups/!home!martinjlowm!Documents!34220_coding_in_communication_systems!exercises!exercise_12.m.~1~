@@ -1,5 +1,0 @@
-% 1.1
-imgPath = ['~/Documents/34220_coding_in_communication_systems/' ...
-           'images/images/'];
-
-imread([imgPath 'ba2.tif'])

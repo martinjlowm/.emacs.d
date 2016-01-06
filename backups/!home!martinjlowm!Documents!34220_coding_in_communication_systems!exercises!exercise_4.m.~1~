@@ -1,8 +1,0 @@
-% 1.
-% Se Noter
-a = fliplr(gftuple([-1 : 2^5-2]', 5, 2))
-
-% 2.
-m = 5;
-F = gf(0:31, m);
-log(F(2:end))

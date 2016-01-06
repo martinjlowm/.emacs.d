@@ -1,8 +1,0 @@
-m = 7;
-D = zeros(1, m);
-D(end) = 1;
-for i = 1:m-1
-    D = circshift(D, [0, 1]);
-    D(1) = xor(D(1), D(end));
-    D
-end

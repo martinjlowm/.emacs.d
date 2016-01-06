@@ -32,7 +32,7 @@
 
 ;;; Code:
 
-(defconst sage-mode-version "0.10"
+(defconst sage-mode-version "0.14"
   "Version of `sage-mode'.")
 
 (defgroup sage nil "Major mode for editing and running Sage"
@@ -88,7 +88,7 @@ Additional arguments are added when the command is used by `run-sage' et al."
   :type 'boolean)
 
 (defcustom sage-startup-before-prompt-command
-  ""
+  "%colors NoColor"
   "*Send this command to the sage slave each time it is executed by `run-sage', BEFORE the first prompt is seen."
   :group 'sage
   :type 'string)

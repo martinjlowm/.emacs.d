@@ -2,36 +2,10 @@
 ;; It keeps track of your preferences for running commands with multiple cursors.
 
 (setq mc/cmds-to-run-for-all '(kill-region
-                               c-electric-star
-                               cua-paste
-                               TeX-insert-backslash
-                               py-electric-backspace
-                               autopair-backspace
-                               c-electric-backspace
-                               TeX-insert-dollar
-                               matlab-shell-delete-backwards-no-prompt
-                               TeX-insert-sub-or-superscript
-                               org-self-insert-command
-                               python-indent-dedent-line-backspace
-                               dired-unmark-backward
-                               undefined
-                               dired-clean-directory
-                               delete-horizontal-space
-                               indent-for-tab-command
-                               LaTeX-babel-insert-hyphen
-                               orgtbl-self-insert-command
-                               c-electric-paren
-                               org-delete-char
-                               c-electric-semi&comma
-                               dired-flag-file-deletion
-                               yas-expand
-                               wdired-finish-edit
-                               c-electric-colon
-                               c-electric-delete-forward))
+                               subword-right
+                               helm-M-x))
 
-(setq mc/cmds-to-run-once '(org-cycle
-                            org-delete-backward-char
-                            end-of-buffer))
+(setq mc/cmds-to-run-once '(autopair-backspace))
 
                             
                                

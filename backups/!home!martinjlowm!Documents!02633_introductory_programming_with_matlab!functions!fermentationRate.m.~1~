@@ -1,4 +1,0 @@
-function averageRate = fermentationRate(measuredRate, lowerBound, ...
-                                        upperBound)
-averageRate = sum(measuredRate) / length(measuredRate);
-end
