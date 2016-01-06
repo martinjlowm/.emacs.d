@@ -1,0 +1,53 @@
+(setq default-directory "~/Documents/bachelor_project/thesis")
+(load "~/.emacs.d/neotree-init.el")
+
+(let ((buf (current-buffer)))
+  (get-buffer-create "*compilation*")
+  (switch-to-buffer "*compilation*")
+  (insert-char ?\ )
+  (end-of-buffer)
+  (split-window-vertically 50)
+  (windmove-down)
+  (with-current-buffer
+      (current-buffer)
+    (setq-local window-size-fixed 'height))
+  (set-window-dedicated-p (selected-window) 1)
+  (windmove-up)
+  (switch-to-buffer buf)
+  (split-window-horizontally 94)
+  (windmove-right)
+  (find-file "Thesis.pdf")
+  (switch-to-buffer "Thesis.pdf")
+  (with-current-buffer
+      (current-buffer)
+    (setq-local window-size-fixed 'height))
+  (set-window-dedicated-p (selected-window) 1)
+  (windmove-left)
+  (find-file "Thesis.tex")
+  (compile "make -C ~/Documents/bachelor_project/thesis"))
+
+(define-key LaTeX-mode-map (kbd "C-c C-c")
+  (lambda ()
+    (interactive)
+    (lexical-let (finish-callback)
+      (setq finish-callback
+            (lambda (buf msg)
+              (with-current-buffer (get-buffer "Thesis.pdf")
+                (doc-view-revert-buffer nil t))
+              (setq compilation-finish-functions
+                    (delq finish-callback compilation-finish-functions))))
+      (push finish-callback compilation-finish-functions))
+    (compile "make -C ~/Documents/bachelor_project/thesis")))
+
+(setq ignore-windows (append '("*compilation*"
+                               "Thesis.pdf") ignore-windows))
+
+(run-with-timer 2 nil (lambda ()
+                        (windmove-down)
+                        (switch-to-buffer "*scratch*")
+                        (switch-to-buffer "*compilation*")
+                        (end-of-buffer)
+                        (windmove-up)
+                        (windmove-right)
+                        (doc-view-fit-page-to-window)
+                        (windmove-left)))
