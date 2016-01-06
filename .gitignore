@@ -5,8 +5,9 @@ backups/
 .smex-items
 recentf
 *.elc
-tramp
 *conflicted
 *.eld
 .bzr/
 .hg/
+tramp
+*.last
