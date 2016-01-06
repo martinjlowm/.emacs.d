@@ -464,6 +464,8 @@
 (global-set-key (kbd "M-o") 'helm-projectile)
 
 ;; Flycheck
+(add-to-list 'load-path "~/.emacs.d/vendor/seq.el")
+(require 'seq)
 (add-to-list 'load-path "~/.emacs.d/vendor/flycheck")
 (require 'flycheck)
 (flycheck-add-mode 'php 'web-mode)
