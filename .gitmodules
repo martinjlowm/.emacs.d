@@ -272,3 +272,7 @@
 [submodule "wpcs"]
 	path = vendor/wpcs
 	url = git@github.com:WordPress-Coding-Standards/WordPress-Coding-Standards.git
+
+[submodule "seq.el"]
+	path = vendor/seq.el
+	url = git@github.com:NicolasPetton/seq.el.git
