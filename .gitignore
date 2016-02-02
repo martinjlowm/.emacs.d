@@ -1,6 +1,9 @@
 auto-save-list/
 backups/
 \#*
+.\#*
+.bbdb
+.signature
 .mc-lists.el
 .smex-items
 recentf
@@ -11,3 +14,4 @@ recentf
 .hg/
 tramp
 *.last
+eshell/
