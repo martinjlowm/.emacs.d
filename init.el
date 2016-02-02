@@ -40,14 +40,22 @@
       gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
 (setq message-citation-line-function 'message-insert-formatted-citation-line)
 (setq message-citation-line-format "\n\nOn %a, %b %d %Y, %f wrote:")
-;; (gnus-demon-add-handler 'gnus-demon-scan-news 2 t)
-;; (setq gnus-signature-file "~/.signature")
+(setq gnus-signature-file ".signature")
+(setq message-signature-file ".signature")
 (setq user-mail-address "martin@martinjlowm.dk")
 
 (add-to-list 'load-path "~/.emacs.d/vendor/bbdb/lisp")
 (require 'bbdb-loaddefs)
 (bbdb-initialize 'gnus 'message)
-(add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
+(bbdb-mua-auto-update-init 'gnus 'message)
+(setq bbdb-file "~/.emacs.d/.bbdb")
+(add-hook 'gnus-startup-hook (lambda ()
+                               (gnus-demon-add-handler 'gnus-demon-scan-news 2 t)))
+(setq bbdb-mua-auto-update-p t)
+
+;; (add-hook 'message-mode-hook
+;;           (function (lambda()
+;;                       (local-set-key (kbd "<tab>") 'bbdb-complete-name))))
 
 (setq tramp-shell-prompt-pattern "^[^$>\n]*[#$%>] *\\(\[[0-9;]*[a-zA-Z] *\\)*")
 (global-unset-key (kbd "C-z"))
@@ -301,19 +309,19 @@
 (require 'calc-inline)
 
 ;; NeoTree
-(add-to-list 'load-path "~/.emacs.d/vendor/emacs-neotree")
-(require 'neotree)
+;; (add-to-list 'load-path "~/.emacs.d/vendor/emacs-neotree")
+;; (require 'neotree)
 
 ;; Ignore `C-x 1' for certain buffers
-(ad-unadvise 'delete-other-windows)
-(defvar ignore-windows '())
-(defadvice delete-other-windows (around neotree-delete-other-windows activate)
-  "Delete all windows except neotree."
-  (interactive)
-  (mapc (lambda (window)
-          (if (not (member (buffer-name (window-buffer window)) ignore-windows))
-        (delete-window window)))
-          (cdr (window-list))))
+;; (ad-unadvise 'delete-other-windows)
+;; (defvar ignore-windows '())
+;; (defadvice delete-other-windows (around neotree-delete-other-windows activate)
+;;   "Delete all windows except neotree."
+;;   (interactive)
+;;   (mapc (lambda (window)
+;;           (if (not (member (buffer-name (window-buffer window)) ignore-windows))
+;;         (delete-window window)))
+;;           (cdr (window-list))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -330,7 +338,7 @@
     ("e3c85c5da800be5fe6c1cd0e7884031edf065e44e42aa07096aa26d117c28092" "baed08a10ff9393ce578c3ea3e8fd4f8c86e595463a882c55f3bd617df7e5a45" "0bac11bd6a3866c6dee5204f76908ec3bdef1e52f3c247d5ceca82860cccfa9d" default)))
  '(eclim-eclipse-dirs (quote ("/usr/share/eclipse/plugins/org.eclim_2.4.0")))
  '(eclim-executable "/usr/share/eclipse/plugins/org.eclim_2.4.0/bin/eclim")
- '(flycheck-display-errors-function (quote flycheck-display-error-messages-unless-error-list))
+ '(flycheck-display-errors-function (quote flycheck-display-error-messages-revised))
  '(flycheck-googlelint-extensions "cc,h,cpp,cu,cuh,hpp")
  '(flycheck-googlelint-filter "+build/include,-whitespace,+whitespace/braces")
  '(flycheck-googlelint-linelength "80")
@@ -339,6 +347,15 @@
  '(flycheck-phpcs-standard "WordPress")
  '(global-flycheck-mode t)
  '(latex-indent-within-escaped-parens t)
+ '(ledger-reports
+   (quote
+    (("register" "ledger assets")
+     ("Assets" "ledger -p \"this month\"")
+     ("bal" "ledger -f %(ledger-file) bal")
+     ("reg" "ledger -f %(ledger-file) reg --amount-width 15")
+     ("payee" "ledger -f %(ledger-file) reg @%(payee)")
+     ("account" "ledger -f %(ledger-file) reg %(account) --amount-width 15"))))
+ '(matlab-indent-level 2)
  '(matlab-shell-command "/Applications/MATLAB_R2015b.app/bin/matlab")
  '(mm-text-html-renderer (quote gnus-w3m))
  '(neo-banner-message "")
@@ -378,6 +395,10 @@
 ; Doc mode
 (add-to-list 'load-path "~/.emacs.d/vendor/doc-mode")
 (require 'doc-mode)
+
+;; Ledger mode
+(add-to-list 'load-path "/usr/local/Cellar/ledger/3.1_1/share/emacs/site-lisp/ledger")
+(require 'ledger-mode)
 
 ; Enable X clipboard
 (setq x-select-enable-clipboard t)
@@ -551,6 +572,8 @@
 (require 'ace-jump-mode)
 (define-key global-map (kbd "<clear>") 'ace-jump-mode)
 
+(define-key global-map (kbd "<M-clear>") 'goto-line)
+
 ; JS2
 (add-to-list 'load-path "~/.emacs.d/vendor/js2-mode")
 (autoload 'js2-mode "js2-mode" nil t)
@@ -656,7 +679,7 @@
 
 (add-to-list 'load-path "~/.emacs.d/vendor/emacs-gradle-mode")
 (require 'gradle-mode)
-(gradle-mode 1)
+;; (gradle-mode 1)
 
 (add-to-list 'load-path "~/.emacs.d/vendor/groovy-emacs-modes")
 (require 'groovy-mode)
@@ -968,3 +991,18 @@ entries for git.gnus.org:
           (forward-line)))
       ;; return `ret' iff it has the :secret key
       (and (plist-get ret :secret) (list ret))))
+
+(defun flycheck-display-error-messages-revised (errors)
+  "Display the messages of ERRORS.
+
+Concatenate all non-nil messages of ERRORS separated by empty
+lines, and display them with `display-message-or-buffer', which
+shows the messages either in the echo area or in a separate
+buffer, depending on the number of lines.  See Info
+node `(elisp)Displaying Messages' for more information.
+
+In the latter case, show messages in
+`flycheck-error-message-buffer'."
+  (when (and errors (flycheck-may-use-echo-area-p))
+    (let ((messages (seq-map #'flycheck-error-format-message-and-id errors)))
+      (message "%s" (string-join messages "\n\n")))))
