@@ -1,0 +1,8 @@
+#+TITLE:        .emacs.d -- Emacs Setup
+#+AUTHOR:	Martin Jesper Low Madsen
+#+EMAIL:	martin@martinjlowm.dk
+
+My personal Emacs setup.
+
+* Screenshot
+[[./screenshot.png]]
