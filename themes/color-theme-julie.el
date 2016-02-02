@@ -499,26 +499,27 @@
                                  (intern (format "powerline-%s-%s"
                                                  (powerline-current-separator)
                                                  (cdr powerline-default-separator-dir))))
-                                (lhs (list (powerline-raw "%*" nil 'l)
-                                           (powerline-buffer-size nil 'l)
-                                           (powerline-buffer-id nil 'l)
-                                           (powerline-raw " ")
-                                           ;; (funcall separator-left mode-line face1)
-                                           (powerline-narrow face1 'l)
-                                           (powerline-raw "%4l" face1 'l)
+                                (lhs (list (powerline-raw "%*" nil 'l) ; Edited
+                                           (powerline-raw " " face1)
+                                           (powerline-buffer-id nil 'r) ; Buffer name
+                                           (powerline-raw "%3l" face1 'l) ; Line number
                                            (powerline-raw ":" face1)
-                                           (powerline-raw "%3c" face1 'l)))
+                                           (powerline-raw "%3c" face1))) ; Column number
                                 (rhs (list (powerline-raw global-mode-string face1 'r)
                                            (powerline-raw " " face1)
-                                           (powerline-vc face1)))
+                                           (powerline-buffer-size nil 'l) ; Number of chars in buffer (size)
+                                           (powerline-vc face1)))         ; Git
                                 (center (list (powerline-raw " " face1)
                                               (funcall separator-left face1 face2)
                                               (when (and (boundp 'erc-track-minor-mode) erc-track-minor-mode)
                                                 (powerline-raw erc-modified-channels-object face2 'l))
-                                              (powerline-major-mode face2 'l)
+                                              (powerline-major-mode face2 'l) ; Major mode
                                               (powerline-process face2)
-                                              (powerline-raw " :" face2)
-                                              (powerline-minor-modes face2 'l)
+                                              (powerline-raw " " face2)
+                                              (funcall separator-right face2 face1)
+                                              (powerline-raw " " face1)
+                                              (funcall separator-left face1 face2)
+                                              (powerline-minor-modes face2 'l) ; Minor modes
                                               (powerline-raw " " face2)
                                               (funcall separator-right face2 face1))))
                            (concat (powerline-render lhs)
