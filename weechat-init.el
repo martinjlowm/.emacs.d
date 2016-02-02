@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 (add-to-list 'load-path "~/.emacs.d/vendor/weechat.el")
 (require 'weechat)
 
@@ -17,8 +19,6 @@
 
         ;; Twitch
         "twitch.#zeroempires"))
-
-(weechat-connect "home.martinjlowm.dk" 6667 nil 'ssl)
 
 (defun weechat-split-windows ()
   (delete-other-windows)
@@ -40,6 +40,7 @@
 (load-library "weechat-notifications")
 
 (custom-set-variables
+ '(weechat-relay-ping-idle-seconds 10)
  '(weechat-header-line-format nil)
  '(weechat-prompt " » ")
  '(weechat-max-nick-length 12)
@@ -54,6 +55,68 @@
                                     "#e0db55" "#385e6b" "#add8e6"
                                     "#7f355e" "#9f55be" "#34676f"
                                     "#84d7ef" "#b9bbab" "#fff8ce")))
+
+(defun weechat-mode (process buffer-ptr buffer-hash)
+  "Major mode used by weechat buffers.
+
+\\{weechat-mode-map}"
+
+  ;; Hack to restore prompt location
+  (let ((prompt-start (when (boundp 'weechat-prompt-start-marker)
+                        weechat-prompt-start-marker))
+        (prompt-end (when (boundp 'weechat-prompt-end-marker)
+                      weechat-prompt-end-marker)))
+
+    (kill-all-local-variables)
+
+    (puthash :emacs/buffer (current-buffer) buffer-hash)
+    (add-hook 'kill-buffer-hook
+              (lambda ()
+                (when (hash-table-p weechat--buffer-hashes)
+                  (let ((hash (weechat-buffer-hash weechat-buffer-ptr)))
+                    (when (hash-table-p hash)
+                      (remhash :emacs/buffer hash)))))
+              nil
+              'local-hook)
+
+    (use-local-map weechat-mode-map)
+    (setq mode-name "weechat")
+    (setq major-mode 'weechat-mode)
+
+    (set (make-local-variable 'weechat-buffer-ptr) buffer-ptr)
+    (set (make-local-variable 'weechat-server-buffer) (process-buffer process))
+    (set (make-local-variable 'weechat-buffer-number) (gethash "number" buffer-hash))
+    (set (make-local-variable 'weechat-topic) (gethash "title" buffer-hash))
+    (set (make-local-variable 'weechat-lines-received) 0)
+
+    ;; Start with empty user list
+    (set (make-local-variable 'weechat-user-list) nil)
+
+    ;; Setup prompt
+    (make-local-variable 'weechat-local-prompt)
+    (set (make-local-variable 'weechat-prompt-start-marker)
+         (or prompt-start(point-max-marker)))
+    (set (make-local-variable 'weechat-prompt-end-marker)
+         (or prompt-end(point-max-marker)))
+    (weechat-update-prompt)
+
+    ;; Initialize input-ring
+    (set (make-local-variable 'weechat-input-ring) (make-ring weechat-input-ring-size))
+
+    ;; Don't auto-add newlines on next-line
+    (set (make-local-variable 'next-line-add-newlines) nil)
+    ;; Fix scrolling
+    (set (make-local-variable 'scroll-conservatively) 1000)
+    (set (make-local-variable 'scroll-margin) 0)
+
+    ;; Initialize buffer
+    (weechat-request-initial-lines buffer-ptr)
+
+    ;; Set Header
+    (weechat-update-header-line-buffer (current-buffer))
+
+    ;; Hooks
+    (run-mode-hooks 'weechat-mode-hook)))
 
 (defun weechat-word-length-at (position)
   (save-excursion
@@ -300,9 +363,6 @@ and port number respectively."
          (password (or password
                        (weechat-get-password host port)))
          (mode (or mode weechat-mode-default)))
-    (push mode weechat-mode-history)
-    (setq weechat-last-port port)
-    (push host weechat-host-history)
     (weechat-message "Weechat connecting to %s:%d" host port)
     (when (weechat-relay-connected-p)
       (if (or force-disconnect
@@ -311,23 +371,149 @@ and port number respectively."
         (error "Can't open two connections")))
     (when (and (stringp host)
                (integerp port))
+      (push mode weechat-mode-history)
+      (setq weechat-last-port port)
+      (push host weechat-host-history)
       (weechat-relay-connect
        host
        port
        mode
-       (lambda ()
-         (weechat-relay-authenticate password)
-         (weechat-relay-send-command
-          "info version"
-          (lambda (data)
-            (let ((version-str (cdar data)))
-              (weechat-message "Connected to '%s', version %s" host
-                               version-str)
-              (setq weechat-version version-str))
-            (weechat-update-buffer-list
-             (lambda ()
-               (weechat-relay-send-command "sync")
-               (setq weechat--connected t)
-               (weechat--relay-start-ping-timer)
-               (weechat-cancel-reconnect)
-               (run-hooks 'weechat-connect-hook))))))))))
+       (lambda (process)
+         (if process
+             (progn
+               (weechat-relay-authenticate password)
+               (weechat-relay-send-command
+                "info version"
+                (lambda (data)
+                  (let ((version-str (cdar data)))
+                    (weechat-message "Connected to '%s', version %s"
+                                     host version-str)
+                    (setq weechat-version version-str))
+                  (weechat-update-buffer-list
+                   (lambda ()
+                     (weechat-relay-send-command "sync")
+                     (setq weechat--connected t)
+                     (weechat--relay-start-ping-timer)
+                     (weechat-cancel-reconnect)
+                     (run-hooks 'weechat-connect-hook))))))
+           ;; Connection failed, kill buffers for the failed connection
+           (kill-buffer weechat-relay-buffer-name)
+           (when (get-buffer weechat-relay-log-buffer-name)
+             (kill-buffer weechat-relay-log-buffer-name))
+           (weechat-handle-reconnect-maybe)))))))
+
+(defun weechat-relay-connect (host port mode &optional callback)
+  "Open a new weechat relay connection to HOST at PORT.
+
+Argument MODE Null or 'plain for a plain socket, t or 'ssl for a TLS socket;
+a string denotes a command to run. You can use %h and %p to interpolate host
+and port number respectively.
+
+Optional argument CALLBACK Called after initialization is finished."
+  ;; Clean relay buffer to start with clean state
+  (with-current-buffer (get-buffer-create weechat-relay-buffer-name)
+    (let ((inhibit-read-only t)
+          (proc (get-buffer-process (current-buffer))))
+      (when proc
+        (set-process-sentinel proc nil)
+        (delete-process proc))
+      (delete-region (point-min) (point-max))))
+  (let* ((pfun (cond
+                ((or (null mode) (eq mode 'plain)) #'weechat--relay-plain-socket)
+                ((or (eq mode t) (eq mode 'ssl)) #'weechat--relay-tls-socket)
+                ((stringp mode) (weechat--relay-from-command mode))))
+         (process
+          (funcall pfun weechat-relay-buffer-name host port)))
+    (when process
+      (set-process-sentinel process #'weechat--relay-process-sentinel)
+      (set-process-coding-system process 'binary)
+      (set-process-filter process #'weechat--relay-process-filter)
+      (with-current-buffer (get-buffer weechat-relay-buffer-name)
+        (setq buffer-read-only t)
+        (set-buffer-multibyte nil)
+        (buffer-disable-undo))
+      (with-current-buffer (get-buffer-create
+                            weechat-relay-log-buffer-name)
+        (buffer-disable-undo)))
+    (when (functionp callback)
+      (funcall callback process)))
+
+  ;; Rethink this, it's called regardless of succesfulness
+  (run-hooks 'weechat-relay-connect-hook))
+
+(defun weechat--relay-start-ping-timer ()
+  (weechat--relay-stop-ping-timer)
+  (setq weechat--relay-ping-timer
+        (run-with-timer
+         0
+         (/ weechat-relay-ping-idle-seconds 2)
+         (lambda ()
+           (if (weechat-relay-connected-p)
+               (let
+                   ((last-received (float-time (time-since weechat-relay-last-receive))))
+                 (cond
+                  ;; Expect a timeout if 5 seconds passes without response after
+                  ;; a ping
+                  ((>= last-received
+                       (+ weechat-relay-ping-idle-seconds 5))
+                   (weechat-relay-disconnect)
+                   (run-hooks 'weechat-relay-disconnect-hook))
+                  ;; If it's not there yet, simply send a ping
+                  ((>= last-received
+                       weechat-relay-ping-idle-seconds)
+                   (weechat--relay-send-ping))))
+             ;; Stop the ping timer if we aren't connected
+             (weechat--relay-stop-ping-timer))))))
+
+(defun weechat-relay-disconnect ()
+  "Disconnect current weechat relay connection and close all buffers."
+  (message "%s" "deeeeeeerp")
+  (when (weechat-relay-connected-p)
+    (message "%s" "are we connected?")
+    (weechat--relay-send-message "quit")
+    (with-current-buffer weechat-relay-buffer-name
+      (let ((proc (get-buffer-process (current-buffer))))
+        ;; When disconnecting interactively (e.g. when this function
+        ;; is called), prevent running any disconnect hooks.
+        (set-process-sentinel proc nil)
+        (delete-process proc)
+        ;; Stop the ping timer
+        (weechat--relay-stop-ping-timer))
+      (kill-buffer))
+    (when (get-buffer weechat-relay-log-buffer-name)
+      (kill-buffer weechat-relay-log-buffer-name))))
+
+;; (defun weechat-relay-disconnect ()
+;;   "Disconnect current weechat relay connection and close all buffers."
+;;   (when (weechat-relay-connected-p)
+;;     (weechat--relay-send-message "quit")
+;;     (with-current-buffer weechat-relay-buffer-name
+;;       (let ((proc (get-buffer-process (current-buffer))))
+;;         ;; When disconnecting interactively (e.g. when this function
+;;         ;; is called), prevent running any disconnect hooks.
+;;         (when proc
+;;           (set-process-sentinel proc nil)
+;;           (delete-process proc))
+;;         ;; Stop the ping timer
+;;         (weechat--relay-stop-ping-timer))
+;;       (kill-buffer))
+;;     (when (get-buffer weechat-relay-log-buffer-name)
+;;       (kill-buffer weechat-relay-log-buffer-name))))
+
+;; (defun weechat--relay-send-message (text &optional id)
+;;   "Send message TEXT with optional ID.
+;; Trim TEXT prior to sending it."
+;;   (let ((msg (concat (when id (format "(%s) " id)) (s-trim text) "\n")))
+;;     (weechat-relay-log (format "Sending msg: '%s'" (s-trim msg))
+;;                        :debug)
+;;     (let ((process (get-buffer-process weechat-relay-buffer-name)))
+;;       (if process
+;;           (send-string process msg)
+;;         (if (weechat-relay-connected-p)
+;;             (weechat-warn "`get-buffer-process' returned nil for `weechat-relay-buffer-name'")
+
+;;           (weechat--relay-stop-ping-timer)
+;;           (unless (timerp weechat-reconnect-timer)
+;;             (weechat-handle-reconnect-maybe)))))))
+
+(weechat-connect "home.martinjlowm.dk" 6667 nil 'ssl)
