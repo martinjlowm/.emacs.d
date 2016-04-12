@@ -1,4 +1,5 @@
 (require 'cl)
+
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 (scroll-bar-mode 0)
@@ -12,57 +13,141 @@
 (add-to-list 'load-path "~/.emacs.d/vendor/exec-path-from-shell")
 (require 'exec-path-from-shell)
 
-(add-to-list 'load-path "~/.emacs.d/vendor/osx-keychain.el")
-(require 'osx-keychain)
-
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 
 ;; Mail
-(setq mm-text-html-renderer 'w3m)
-(setq gnus-select-method
-      '(nnimap "gmail"
-	       (nnimap-address "imap.gmail.com")
-               (nnimap-user "martin@martinjlowm.dk")
-	       (nnimap-server-port 993)
-	       (nnimap-stream ssl)))
+(add-to-list 'load-path "~/.emacs.d/vendor/smtpmail-multi")
+(require 'smtpmail-multi)
 
-(setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-      smtpmail-auth-credentials '(("smtp.gmail.com" 587
-				   "martin@martinjlowm.dk"
-                                   (find-keychain-internet-password
-                                    "martin@martinjlowm.dk"
-                                    "imap.gmail.com")))
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 587
-      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
-(setq message-citation-line-function 'message-insert-formatted-citation-line)
-(setq message-citation-line-format "\n\nOn %a, %b %d %Y, %f wrote:")
-(setq gnus-signature-file ".signature")
-(setq message-signature-file ".signature")
+(setq smtpmail-multi-accounts           ; SMTP Details
+      '((hegnetdtu@gmail\.com
+         "hegnetdtu@gmail.com" "smtp.gmail.com" 587 header starttls nil nil nil)
+        (mjlo@dtu\.dk
+         "mjlo" "mail.dtu.dk" 587 header starttls nil nil nil)
+        (s124320@student\.dtu\.dk
+         "s124320" "smtp.student.dtu.dk" 587 header starttls nil nil nil)
+        (martin@martinjlowm\.dk
+         "martin@martinjlowm.dk" "smtp.gmail.com" 587 header starttls nil nil nil))
+      smtpmail-multi-associations       ; From header associations
+      '(("hegnetdtu@gmail.com" hegnetdtu@gmail\.com)
+        ("mjlo@dtu.dk" mjlo@dtu\.dk)
+        ("s124320@student.dtu.dk" s124320@student\.dtu\.dk)
+        ("martin@martinjlowm.dk" martin@martinjlowm\.dk)))
+
+(setq mm-text-html-renderer 'w3m)
+
+;; Set select methods
+(setq gnus-select-method '(nnnil "")
+      gnus-secondary-select-methods
+      '((nntp "news.gmane.org")
+        (nnimap "personal"              ; martin@martinjlowm.dk
+                (nnimap-address "imap.gmail.com")
+                (nnimap-user "martin@martinjlowm.dk")
+                (nnimap-server-port 993)
+                (nnimap-stream ssl))
+        (nnimap "hegnet"                ; hegnetdtu@gmail.com
+                (nnimap-address "imap.gmail.com")
+                (nnimap-user "hegnetdtu@gmail.com")
+                (nnimap-server-port 993)
+                (nnimap-stream ssl))
+        (nnimap "student_mail"          ; s124320@student.dtu.dk
+                (nnimap-address "imap.student.dtu.dk")
+                (nnimap-user "s124320")
+                (nnimap-server-port 993)
+                (nnimap-stream ssl))
+        ;; (nnimap "mail.dtu.dk"           ; DTU mail
+        ;;         (nnimap-user "WIN\\mjlo")
+        ;;         (nnimap-server-port 993)
+        ;;         (nnimap-stream ssl))
+        ))
+(add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+
+(setq message-send-mail-function 'smtpmail-multi-send-it
+      message-citation-line-function 'message-insert-formatted-citation-line
+      message-citation-line-format "\n\nOn %a, %b %d %Y, %f wrote:"
+      message-signature-file "~/.emacs.d/.signature")
+
 (setq user-mail-address "martin@martinjlowm.dk")
 
+(setq gnus-signature-file "~/.emacs.d/.signature"
+      gnus-parameters
+      '(("personal:*"
+         (display . all)
+         (posting-style
+          (address "martin@martinjlowm.dk")
+          (name "Martin Jesper Low Madsen")
+          (signature-file "~/.emacs.d/.signature")))
+        ("hegnet:*"
+         (display . all)
+         (posting-style
+          (address "hegnetdtu@gmail.com")
+          (name "Studentercaféen Hegnet ved DTU")
+          (organization "Hegnet")
+          (signature-file "~/.emacs.d/.signature_hegnet")))
+        ("student_mail:*"
+         (display . all)
+         (posting-style
+          (name "Martin Jesper Low Madsen")
+          (address "s124320@student.dtu.dk")
+          (signature-file "~/.emacs.d/.signature_student_mail")))
+        ("dtu:*"
+         (display . all)
+         (posting-style
+          (name "Martin Jesper Low Madsen")
+          (address "mjlo@dtu.dk")
+          (signature-file "~/.emacs.d/.signature_dtu"))))
+      ;; Gnus RT setup
+      gnus-posting-styles
+      '((rt-liber-gnus-p
+         (signature-file "~/.emacs.d/.signature_latex")
+         (address "latex-support@student.dtu.dk")
+         (from "latex-support@student.dtu.dk")))
+      gnus-thread-sort-functions '(gnus-thread-sort-by-subject
+                                   gnus-thread-sort-by-most-recent-date)
+      gnus-summary-line-format "%U%R%I%(%[%-23,23f %&user-date;%]%) %s\n")
+
+
+;; BBDB
 (add-to-list 'load-path "~/.emacs.d/vendor/bbdb/lisp")
 (require 'bbdb-loaddefs)
 (bbdb-initialize 'gnus 'message)
 (bbdb-mua-auto-update-init 'gnus 'message)
-(setq bbdb-file "~/.emacs.d/.bbdb")
-(add-hook 'gnus-startup-hook (lambda ()
-                               (gnus-demon-add-handler 'gnus-demon-scan-news 2 t)))
-(setq bbdb-mua-auto-update-p t)
+(setq bbdb-file "~/.emacs.d/.bbdb"
+      bbdb-mua-auto-update-p t
+      bbdb-mua-pop-up nil
+      bbdb-ignore-some-messages-alist '(("From" . "no.?reply\\|no-reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter\\|bounce")))
 
-;; (add-hook 'message-mode-hook
-;;           (function (lambda()
-;;                       (local-set-key (kbd "<tab>") 'bbdb-complete-name))))
+;; Alert notifications
+(add-to-list 'load-path "~/.emacs.d/vendor/alert")
+(require 'alert)
+(setq alert-default-style 'notifier)
+
+;; Track Gnus mail
+(add-to-list 'load-path "~/.emacs.d/vendor/gnus-desktop-notify.el")
+(require 'gnus-desktop-notify)
+
+(add-hook 'gnus-startup-hook
+          (lambda ()
+            (gnus-desktop-notify-mode)
+            (gnus-demon-add-handler 'gnus-demon-scan-news 2 t)))
+
+(add-hook 'gnus-summary-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-k")  'gnus-summary-delete-article)))
+
 
 (setq tramp-shell-prompt-pattern "^[^$>\n]*[#$%>] *\\(\[[0-9;]*[a-zA-Z] *\\)*")
 (global-unset-key (kbd "C-z"))
 (global-set-key (kbd "<escape>") 'keyboard-quit)
+
+;; Use spaces for indentation by default
 (setq-default indent-tabs-mode nil)
-;; (setq indent-tabs-mode t)
 (show-paren-mode t)
+
+;; PKGBUILD-mode
+(add-to-list 'load-path "~/.emacs.d/vendor/pkgbuild-mode")
+(require 'pkgbuild-mode)
 
 (setq resize-mini-windows 'nil)
 (set-face-attribute 'default nil :height 130)
@@ -87,15 +172,7 @@
                            (local-unset-key (kbd "S-<left>"))
                            (local-unset-key (kbd "S-<right>"))))
 
-(setq set-fill-column 72)
-
-;; (add-to-list 'load-path "~/.emacs.d/vendor/auctex")
-;; (load "auctex.el" nil t t)
-;;(load "preview-latex.el" nil t t)
-
-;; (defun run-arara ()
-;;   (interactive)
-;;   (message (shell-command-to-string (concat "arara " (buffer-file-name)))))
+(setq org-confirm-babel-evaluate nil)
 
 (add-to-list 'load-path "~/.emacs.d/vendor/auctex-latexmk")
 (add-hook 'LaTeX-mode-hook
@@ -119,16 +196,6 @@
             (append LaTeX-clean-intermediate-suffixes
                         '("\\.pyg"))))
 
-
-;; (add-hook 'TeX-mode-hook (lambda ()
-;;                            (TeX-PDF-mode t)
-;;                            (setq TeX-view-program-selection (quote
-;;                                                              (((output-dvi style-pstricks)
-;;                                                                "dvips and gv")
-;;                                                               (output-dvi "xdvi")
-;;                                                               (output-pdf "xdg-open")
-;;                                                               (output-html "xdg-open"))))
-;;                            (define-key LaTeX-mode-map (kbd "C-c C-c") 'run-arara)))
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       backup-by-copying t    ; Don't delink hardlinks
@@ -362,6 +429,10 @@
  '(neo-header-height 0 t)
  '(neo-tree-display-cur-dir nil)
  '(neo-window-width 20)
+ '(org-format-latex-options
+   (quote
+    (:foreground default :background default :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
+     ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(powerline-default-separator (quote utf-8))
  '(vhdl-project nil)
  '(vhdl-project-alist
@@ -427,6 +498,12 @@
 (add-to-list 'load-path "~/.emacs.d/vendor/sage-mode/emacs")
 (require 'sage "sage")
 (setq sage-command "/usr/local/bin/sage")
+
+(setq org-src-fontify-natively t)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)
+   (matlab . t)))
 
 ;; Zenburn MOTHAFUCKA!
 ;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/zenburn-emacs")
@@ -686,6 +763,58 @@
 
 (add-to-list 'load-path "~/.emacs.d/vendor/rainbow-mode")
 (require 'rainbow-mode)
+
+(add-to-list 'load-path "~/.emacs.d/vendor/rtliber")
+(require 'rt-liberation)
+(setq rt-liber-rest-url "itsupport.student.dtu.dk"
+      rt-liber-base-url "https://itsupport.student.dtu.dk/"
+      rt-liber-rt-version "4.2.10"
+      rt-liber-jump-to-latest t
+      rt-liber-update-default-queue "Latex Support"
+      rt-liber-rest-username "martinjlm"
+      rt-liber-username "martinjlm"
+      rt-liber-rest-password (funcall (plist-get (car (auth-source-search
+                                         :max 1
+                                         :host "itsupport.student.dtu.dk"
+                                         :port "443"
+                                         :require '(:secret))) :secret)))
+
+(require 'rt-liberation-gnus)
+(setq rt-liber-gnus-comment-address "latex-support-comment@student.dtu.dk"
+      rt-liber-gnus-address         "latex-support@student.dtu.dk"
+      rt-liber-gnus-subject-name    "[Latex Support]")
+
+(require 'rt-liberation-update)
+
+(defun fetch-rt-tickets ()
+  (interactive)
+  (rt-liber-browse-query
+   (rt-liber-compile-query (and (queue "Latex Support")
+                                ((or (status "open") (status "new")))
+                                ((or (owner "Nobody") (owner "martinjlm")))
+                                (created nil "2016-01-01")))))
+
+(defun fix-ticket-encoding ()
+  (interactive)
+  (save-excursion
+    (save-excursion
+      (while (re-search-forward "ø" nil t)
+        (replace-match "ø" nil nil)))
+    (save-excursion
+      (while (re-search-forward "å" nil t)
+        (replace-match "å" nil nil)))
+    (save-excursion
+      (while (re-search-forward "æ" nil t)
+        (replace-match "æ" nil nil)))
+    (save-excursion
+      (while (re-search-forward "»" nil t)
+        (replace-match "»" nil nil)))))
+;; (message "%s" (rt-liber-compile-query (and (queue "Latex Support")
+;;                                            ((or (status "open") (status "new")))
+;;                                            ((or (owner "Nobody") (owner "martinjlm")))
+;;                                            (created "2016-01-01"))))
+;;   (rt-liber-browse-query "Queue = 'Latex Support' AND (Status = 'open' OR Status = 'new') AND (Owner = 'Nobody' OR Owner = 'martinjlm') AND Created > '2016-01-01'")
+
 
 ;; FIXME: GPG temp fix
 ;; (defun epg--list-keys-1 (context name mode)
