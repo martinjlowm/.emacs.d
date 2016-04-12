@@ -14,5 +14,6 @@ recentf
 .hg/
 tramp
 *.last
-eshell/
+eshell/*
 ac-comphist.dat
+.mc-lists.el
