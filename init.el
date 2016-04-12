@@ -644,12 +644,11 @@
 ; Ruby
 (add-to-list 'auto-mode-alist '("\\Gemfile\\'" . ruby-mode))
 
-; Ace jump mode
-(add-to-list 'load-path "~/.emacs.d/vendor/ace-jump-mode")
-(require 'ace-jump-mode)
-(define-key global-map (kbd "<clear>") 'ace-jump-mode)
-
-(define-key global-map (kbd "<M-clear>") 'goto-line)
+; Avy
+(add-to-list 'load-path "~/.emacs.d/vendor/avy")
+(require 'avy)
+(define-key global-map (kbd "<clear>") 'avy-goto-char)
+(define-key global-map (kbd "<M-clear>") 'avy-goto-line)
 
 ; JS2
 (add-to-list 'load-path "~/.emacs.d/vendor/js2-mode")
