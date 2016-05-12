@@ -311,3 +311,24 @@
 [submodule "vendor/smtpmail-multi"]
 	path = vendor/smtpmail-multi
 	url = https://github.com/vapniks/smtpmail-multi.git
+[submodule "rust-mode"]
+	path = vendor/rust-mode
+	url = https://github.com/rust-lang/rust-mode.git
+[submodule "Emacs-Smali"]
+	path = vendor/Emacs-Smali
+	url = https://github.com/strazzere/Emacs-Smali.git
+[submodule "emacs-edbi"]
+	path = vendor/emacs-edbi
+	url = https://github.com/kiwanami/emacs-edbi.git
+[submodule "emacs-epc"]
+	path = vendor/emacs-epc
+	url = https://github.com/kiwanami/emacs-epc.git
+[submodule "emacs-deferred"]
+	path = vendor/emacs-deferred
+	url = https://github.com/kiwanami/emacs-deferred.git
+[submodule "emacs-ctable"]
+	path = vendor/emacs-ctable
+	url = https://github.com/kiwanami/emacs-ctable.git
+[submodule "calfw-gcal.el"]
+	path = vendor/calfw-gcal.el
+	url = https://github.com/myuhe/calfw-gcal.el.git
