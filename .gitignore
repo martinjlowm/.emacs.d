@@ -1,3 +1,4 @@
+elpa/
 auto-save-list/
 backups/
 \#*
@@ -17,3 +18,4 @@ tramp
 eshell/*
 ac-comphist.dat
 .mc-lists.el
+.tmp
