@@ -8,11 +8,6 @@
         url = git@github.com:Bruce-Connor/aggressive-indent-mode.git
         branch = master
 
-[submodule "auto-complete"]
-        path = vendor/auto-complete
-	url = git@github.com:auto-complete/auto-complete.git
-        branch = master
-
 [submodule "autopair"]
         path = vendor/autopair
 	url = git://github.com/capitaomorte/autopair.git
@@ -90,7 +85,7 @@
 
 [submodule "markdown-mode"]
         path = vendor/markdown-mode
-	url = git://github.com/defunkt/markdown-mode.git
+	url = https://github.com/jrblevin/markdown-mode.git
         branch = master
 
 [submodule "mark-multiple.el"]
@@ -332,3 +327,111 @@
 [submodule "calfw-gcal.el"]
 	path = vendor/calfw-gcal.el
 	url = https://github.com/myuhe/calfw-gcal.el.git
+[submodule "python-mode"]
+	path = vendor/python-mode
+	url = https://github.com/emacsmirror/python-mode.git
+[submodule "clojure-mode"]
+	path = vendor/clojure-mode
+	url = git@github.com:clojure-emacs/clojure-mode.git
+[submodule "python-django.el"]
+	path = vendor/python-django.el
+	url = git@github.com:fgallina/python-django.el.git
+[submodule "po-mode"]
+	path = vendor/po-mode
+	url = git@github.com:obvio171/po-mode.git
+[submodule "electric-align"]
+	path = vendor/electric-align
+	url = git@github.com:zk-phi/electric-align.git
+[submodule "matlab-mode"]
+	path = vendor/matlab-mode
+	url = git@github.com:yuhonglin/matlab-mode.git
+[submodule "company-moe"]
+	path = vendor/company-mode
+	url = git@github.com:company-mode/company-mode.git
+[submodule "vendor/gnuplot-mode"]
+	path = vendor/gnuplot-mode
+	url = https://github.com/bruceravel/gnuplot-mode.git
+[submodule "vendor/org-bullets"]
+	path = vendor/org-bullets
+	url = https://github.com/sabof/org-bullets.git
+[submodule "vendor/perspective-el"]
+	path = vendor/perspective-el
+	url = https://github.com/nex3/perspective-el.git
+[submodule "rainbow-delimiters"]
+	path = vendor/rainbow-delimiters
+	url = https://github.com/Fanael/rainbow-delimiters.git
+[submodule "realgud"]
+	path = vendor/realgud
+	url = https://github.com/realgud/realgud.git
+[submodule "emacs-loc-changes"]
+	path = vendor/emacs-loc-changes
+	url = https://github.com/rocky/emacs-loc-changes.git
+[submodule "realgud-lldb"]
+	path = vendor/realgud-lldb
+	url = https://github.com/realgud/realgud-lldb.git
+[submodule "cmake-ide"]
+	path = vendor/cmake-ide
+	url = https://github.com/atilaneves/cmake-ide.git
+[submodule "levenshtein"]
+	path = vendor/levenshtein
+	url = https://github.com/emacsmirror/levenshtein.git
+[submodule "vendor/kotlin-mode"]
+	path = vendor/kotlin-mode
+	url = https://github.com/Emacs-Kotlin-Mode-Maintainers/kotlin-mode.git
+[submodule "vendor/emacs-sql-indent"]
+	path = vendor/emacs-sql-indent
+	url = https://github.com/alex-hhh/emacs-sql-indent.git
+[submodule "vendor/haskell-mode"]
+	path = vendor/haskell-mode
+	url = https://github.com/haskell/haskell-mode.git
+[submodule "vendor/rjsx-mode"]
+	path = vendor/rjsx-mode
+	url = https://github.com/felipeochoa/rjsx-mode.git
+[submodule "vendor/with-editor"]
+	path = vendor/with-editor
+	url = https://github.com/magit/with-editor.git
+[submodule "vendor/flycheck-checkstyle"]
+	path = vendor/flycheck-checkstyle
+	url = https://github.com/leeaustinadams/flycheck-checkstyle.git
+[submodule "vendor/pkg-info.el"]
+	path = vendor/pkg-info.el
+	url = https://github.com/lunaryorn/pkg-info.el.git
+[submodule "vendor/epl"]
+	path = vendor/epl
+	url = https://github.com/cask/epl.git
+[submodule "vendor/restclient.el"]
+	path = vendor/restclient.el
+	url = https://github.com/pashky/restclient.el.git
+[submodule "vendor/jdee"]
+	path = vendor/jdee
+	url = https://github.com/jdee-emacs/jdee.git
+[submodule "vendor/emacs-memoize"]
+	path = vendor/emacs-memoize
+	url = https://github.com/skeeto/emacs-memoize.git
+[submodule "vendor/jdee-server"]
+	path = vendor/jdee-server
+	url = https://github.com/jdee-emacs/jdee-server.git
+[submodule "vendor/javadoc-lookup"]
+	path = vendor/javadoc-lookup
+	url = https://github.com/skeeto/javadoc-lookup.git
+[submodule "vendor/tide"]
+	path = vendor/tide
+	url = https://github.com/ananthakumaran/tide.git
+[submodule "vendor/typescript.el"]
+	path = vendor/typescript.el
+	url = https://github.com/ananthakumaran/typescript.el.git
+[submodule "vendor/graphql-mode"]
+	path = vendor/graphql-mode
+	url = https://github.com/davazp/graphql-mode.git
+[submodule "vendor/diminish.el"]
+	path = vendor/diminish.el
+	url = https://github.com/myrjola/diminish.el.git
+[submodule "vendor/doom-emacs"]
+	path = vendor/doom-emacs
+	url = https://github.com/hlissner/doom-emacs.git
+[submodule "vendor/doom-modeline"]
+	path = vendor/doom-modeline
+	url = https://github.com/seagle0128/doom-modeline.git
+[submodule "vendor/lsp-lua-emmy"]
+	path = vendor/lsp-lua-emmy
+	url = https://github.com/phenix3443/lsp-lua-emmy.git
