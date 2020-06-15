@@ -1,0 +1,254 @@
+#+TITLE: Mail settings
+#+AUTHOR: Martin Jesper Low Madsen
+
+#+begin_src emacs-lisp
+;; Mail
+
+;; (eval-after-load 'gnus-topic
+;;   '(progn
+;;      (setq gnus-topic-topology
+;;            '(("Gnus" visible nil nil)
+;;              (("martin@martinjlowm.dk" visible nil nil))
+;;              (("martinjlowm@gmail.com" visible nil nil))
+;;              (("s124320@win.dtu.dk" visible nil nil))
+;;              (("mjlo@dtu.dk" visible nil nil))
+;;              (("hegnetdtu@gmail.com" visible nil nil))
+;;              (("misc" visible nil nil))))
+;;      (setq gnus-topic-alist '(("martin@martinjlowm.dk"
+;;                                "nnimap+personal:AvanT Gardiner" "nnimap+personal:Bank" "nnimap+personal:CampusNet" "nnimap+personal:DTU" "nnimap+personal:Family" "nnimap+personal:Heroku" "nnimap+personal:IDA" "nnimap+personal:INBOX" "nnimap+personal:Launchpad" "nnimap+personal:PF" "nnimap+personal:Website" "nnimap+personal:[Gmail]" "nnimap+personal:[Gmail]/All Mail" "nnimap+personal:[Gmail]/Drafts" "nnimap+personal:[Gmail]/Important" "nnimap+personal:[Gmail]/Sent Mail" "nnimap+personal:[Gmail]/Spam" "nnimap+personal:[Gmail]/Starred" "nnimap+personal:[Gmail]/Trash" "nnimap+personal:rTorrent")
+;;                               ("s124320@win.dtu.dk"
+;;                                "nnimap+student_mail:Trash" "nnimap+student_mail:Drafts" "nnimap+student_mail:Junk" "nnimap+student_mail:Sent" "nnimap+student_mail:Sent Items" "nnimap+student_mail:INBOX")
+;;                               ("mjlo@dtu.dk"
+;;                                "nnimap+dtu:Calendar" "nnimap+dtu:Contacts" "nnimap+dtu:Deleted Items" "nnimap+dtu:Drafts" "nnimap+dtu:INBOX" "nnimap+dtu:Journal" "nnimap+dtu:Junk E-Mail" "nnimap+dtu:Notes" "nnimap+dtu:Outbox" "nnimap+dtu:Sent Items" "nnimap+dtu:Tasks")
+;;                               ("hegnetdtu@gmail.com"
+;;                                "nnimap+hegnet:00_arkiv" "nnimap+hegnet:00_arkiv/BEST" "nnimap+hegnet:00_arkiv/Besøg" "nnimap+hegnet:00_arkiv/CVR" "nnimap+hegnet:00_arkiv/Castello" "nnimap+hegnet:00_arkiv/Dansk Retur" "nnimap+hegnet:00_arkiv/Generalforsamling" "nnimap+hegnet:00_arkiv/Glemte sager" "nnimap+hegnet:00_arkiv/HGGØV" "nnimap+hegnet:00_arkiv/Idræt" "nnimap+hegnet:00_arkiv/Interne arrangementer" "nnimap+hegnet:00_arkiv/NEMID" "nnimap+hegnet:00_arkiv/Store fester" "nnimap+hegnet:00_arkiv/Tidligere Bartenderes Gæld" "nnimap+hegnet:00_arkiv/Tuborgfondet" "nnimap+hegnet:Carlsberg" "nnimap+hegnet:DTU" "nnimap+hegnet:Doodle" "nnimap+hegnet:Hegnet App" "nnimap+hegnet:INBOX" "nnimap+hegnet:Indkøb" "nnimap+hegnet:Indkøb/Bevco" "nnimap+hegnet:Indkøb/Carlsberg" "nnimap+hegnet:Indkøb/Inco" "nnimap+hegnet:Indkøb/Kvitteringer" "nnimap+hegnet:PF" "nnimap+hegnet:PF/KABS" "nnimap+hegnet:PF/Scenelys" "nnimap+hegnet:Pant" "nnimap+hegnet:Red Bull" "nnimap+hegnet:Trainees" "nnimap+hegnet:Udlån" "nnimap+hegnet:Videresalg" "nnimap+hegnet:[Gmail]" "nnimap+hegnet:[Gmail]/All Mail" "nnimap+hegnet:[Gmail]/Bin" "nnimap+hegnet:[Gmail]/Drafts" "nnimap+hegnet:[Gmail]/Important" "nnimap+hegnet:[Gmail]/Sent Mail" "nnimap+hegnet:[Gmail]/Spam" "nnimap+hegnet:[Gmail]/Starred" "nnimap+hegnet:Økonomi")
+;;                               ("martinjlowm@gmail.com"
+;;                                "nnimap+personal_gmail:DTU" "nnimap+personal_gmail:Familie" "nnimap+personal_gmail:Gaming/Guild Wars 2" "nnimap+personal_gmail:LinkedIn" "nnimap+personal_gmail:Twitter" "nnimap+personal_gmail:[Gmail]/Drafts" "nnimap+personal_gmail:[Gmail]/Sent Mail" "nnimap+personal_gmail:[Gmail]/Trash" "nnimap+personal_gmail:derp" "nnimap+personal_gmail:Direkte Demokrati" "nnimap+personal_gmail:Gaming/SMITE" "nnimap+personal_gmail:INBOX" "nnimap+personal_gmail:Madplan" "nnimap+personal_gmail:Ordre mm." "nnimap+personal_gmail:YouTube" "nnimap+personal_gmail:[Gmail]" "nnimap+personal_gmail:[Gmail]/All Mail" "nnimap+personal_gmail:[Gmail]/Important" "nnimap+personal_gmail:[Gmail]/Spam" "nnimap+personal_gmail:[Gmail]/Starred" "nnimap+personal_gmail:Gaming" "nnimap+personal_gmail:MixCloud")
+;;                               ("misc"
+;;                                "nnfolder+archive:sent.2016-02" "nnfolder+archive:sent.2016-03" "nnfolder+archive:sent.2016-04" "nnfolder+archive:sent.2016-05" "nnfolder+archive:sent.2016-06" "nnfolder+archive:sent.2016-07" "nnfolder+archive:sent.2016-08" "nndraft:drafts")
+;;                               ("Gnus")))))
+
+;; (add-to-list 'load-path "~/.emacs.d/vendor/smtpmail-multi")
+;; (require 'smtpmail-multi)
+
+;; (setq smtpmail-multi-accounts           ; SMTP Details
+;;       '((hegnetdtu@gmail\.com
+;;          "hegnetdtu@gmail.com" "smtp.gmail.com" 587 header starttls nil nil nil)
+;;         (s124320@student\.dtu\.dk
+;;          "s124320" "smtp.student.dtu.dk" 465 header ssl nil nil nil)
+;;         (mjlo@dtu\.dk
+;;          "s124320" "mail.win.dtu.dk" 465 header ssl nil nil nil)
+;;         (martin@martinjlowm\.dk
+;;          "martin@martinjlowm.dk" "smtp.gmail.com" 587 header starttls nil nil nil)
+;;         (martinjlowm@gmail\.com
+;;          "martinjlowm@gmail.com" "smtp.gmail.com" 587 header starttls nil nil nil))
+;;       smtpmail-multi-associations       ; From header associations
+;;       '(("martin@martinjlowm.dk" martin@martinjlowm\.dk)
+;;         ("martinjlowm@gmail.com" martinjlowm@gmail\.com)
+;;         ("latex-support@student.dtu.dk" martin@martinjlowm\.dk)
+;;         ("hegnetdtu@gmail.com" hegnetdtu@gmail\.com)
+;;         ("mjlo@dtu.dk" mjlo@dtu\.dk)
+;;         ("s124320@student.dtu.dk" s124320@student\.dtu\.dk)))
+
+(setq mm-text-html-renderer 'w3m)
+
+;; ;; Set select methods
+;; (setq gnus-select-method '(nnnil "")
+;;       gnus-secondary-select-methods
+;;       '((nntp "news.gmane.org")
+;;         (nnimap "personal"              ; martin@martinjlowm.dk
+;;                 (nnimap-address "imap.gmail.com")
+;;                 (nnimap-user "martin@martinjlowm.dk")
+;;                 (nnimap-server-port 993)
+;;                 (nnimap-stream ssl))
+;;         (nnimap "personal_gmail"        ; martinjlowm@gmail.com
+;;                 (nnimap-address "imap.gmail.com")
+;;                 (nnimap-user "martinjlowm@gmail.com")
+;;                 (nnimap-server-port 993)
+;;                 (nnimap-stream ssl))
+;;         (nnimap "hegnet"                ; hegnetdtu@gmail.com
+;;                 (nnimap-address "imap.gmail.com")
+;;                 (nnimap-user "hegnetdtu@gmail.com")
+;;                 (nnimap-server-port 993)
+;;                 (nnimap-stream ssl))
+;;         (nnimap "student_mail"          ; s124320@student.dtu.dk
+;;                 (nnimap-address "imap.student.dtu.dk")
+;;                 (nnimap-user "s124320")
+;;                 (nnimap-server-port 993)
+;;                 (nnimap-stream ssl))
+;;         (nnimap "dtu"          ; mjlo@dtu.dk
+;;                 (nnimap-address "mail.win.dtu.dk")
+;;                 (nnimap-user "s124320")
+;;                 (nnimap-server-port 993)
+;;                 (nnimap-stream ssl))))
+;; (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+
+;; (setq message-send-mail-function 'smtpmail-multi-send-it
+;;       message-citation-line-function 'message-insert-formatted-citation-line
+;;       message-citation-line-format "\n\nOn %a, %b %d %Y, %f wrote:")
+
+
+;; mu4e
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e/")
+(require 'mu4e)
+
+(setq mu4e-maildir "~/mail")
+(setq mu4e-get-mail-command "offlineimap")
+(setq mu4e-maildir-shortcuts
+      '(("/outlook-work/INBOX" . ?w)
+        ("/martinjlowm-personal/INBOX" . ?p)
+        ("/gmail-personal/INBOX" . ?P)))
+;; (setq mu4e-contexts
+;;       `( ,(make-mu4e-context
+;;            :name "outlook-work"
+;;            :match-func (lambda (msg)
+;;                          (when msg
+;;                            (string-prefix-p "/outlook-work" (mu4e-message-field msg :maildir))))
+;;            :vars '((mu4e-trash-folder . "/outlook-work/Trash")
+;;                    (mu4e-refile-folder . "/outlook-work/Archive")
+;;                    (user-mail-address . "mj@blackbird.online")
+;;                    (mu4e-compose-signature
+;;                     . (concat
+;;                        "Best Regards,\n"
+;;                        "\n"
+;;                        "Martin Jesper Low Madsen\n"
+;;                        "Blackbird ApS\n")))
+;;          ,(make-mu4e-context
+;;            :name "gmail-personal"
+;;            :match-func (lambda (msg)
+;;                          (when msg
+;;                            (string-prefix-p "/gmail-personal" (mu4e-message-field msg :maildir))))
+;;            :vars '((mu4e-trash-folder . "/gmail-personal/[Gmail].Trash")
+;;                    (mu4e-refile-folder . "/gmail-personal/[Gmail].All Mail")
+;;                    (user-mail-address . "martinjlowm@gmail.com")
+;;                    (mu4e-compose-signature
+;;                     . (concat
+;;                        "Best Regards,\n"
+;;                        "\n"
+;;                        "Martin Jesper Low Madsen\n"))))
+;;          ,(make-mu4e-context
+;;            :name "martinjlwom-personal"
+;;            :match-func (lambda (msg)
+;;                          (when msg
+;;                            (string-prefix-p "/martinjlowm-personal" (mu4e-message-field msg :maildir))))
+;;            :vars '((mu4e-trash-folder . "/martinjlowm-personal/[Gmail].Trash")
+;;                    (mu4e-refile-folder . "/martinjlowm-personal/[Gmail].All Mail")
+;;                    (user-mail-address . "martin@martinjlowm.dk")
+;;                    (mu4e-compose-signature
+;;                     . (concat
+;;                        "Best Regards,\n"
+;;                        "\n"
+;;                        "Martin Jesper Low Madsen\n")))))))
+
+(defvar my-mu4e-account-alist
+  '(("outlook-work"
+     (mu4e-sent-folder "/outlook-work/Sent Items")
+     (user-mail-address "mj@blackbird.online")
+     (smtpmail-smtp-user "mj@blackbird.online")
+     (smtpmail-local-domain "gmail.com")
+     (smtpmail-default-smtp-server "smtp-mail.outlook.com")
+     (smtpmail-smtp-server "smtp-mail.outlook.com")
+     (smtpmail-smtp-service 587))
+    ("martinjlowm-personal"
+     (mu4e-sent-folder "/martinjlowm-personal/[Gmail].Sent Mail")
+     (user-mail-address "martin@martinjlowm.dk")
+     (smtpmail-smtp-user "martin@martinjlowm.dk")
+     (smtpmail-default-smtp-server "smtp.gmail.com")
+     (smtpmail-smtp-server "smtp.gmail.com")
+     (smtpmail-smtp-service 587))
+    ("gmail-personal"
+     (mu4e-sent-folder "/gmail-personal/[Gmail].Sent Mail")
+     (user-mail-address "martinjlowm@gmail.com")
+     (smtpmail-smtp-user "martinjlowm@gmail.com")
+     (smtpmail-default-smtp-server "smtp.gmail.com")
+     (smtpmail-smtp-server "smtp.gmail.com")
+     (smtpmail-smtp-service 587))))
+
+(defun my-mu4e-set-account ()
+  "Set the account for composing a message.
+   This function is taken from:
+     https://www.djcbsoftware.nl/code/mu/mu4e/Multiple-accounts.html"
+  (let* ((account
+    (if mu4e-compose-parent-message
+        (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
+    (string-match "/\\(.*?\\)/" maildir)
+    (match-string 1 maildir))
+      (completing-read (format "Compose with account: (%s) "
+             (mapconcat #'(lambda (var) (car var))
+            my-mu4e-account-alist "/"))
+           (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
+           nil t nil nil (caar my-mu4e-account-alist))))
+   (account-vars (cdr (assoc account my-mu4e-account-alist))))
+    (if account-vars
+  (mapc #'(lambda (var)
+      (set (car var) (cadr var)))
+        account-vars)
+      (error "No email account found"))))
+(add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
+
+
+;; sending mail -- replace USERNAME with your gmail username
+;; also, make sure the gnutls command line utils are installed
+;; package 'gnutls-bin' in Debian/Ubuntu
+
+(require 'smtpmail)
+(setq message-send-mail-function 'smtpmail-send-it
+   starttls-use-gnutls t
+   smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+   smtpmail-auth-credentials
+     '(("smtp.gmail.com" 587 "USERNAME@gmail.com" nil))
+   smtpmail-default-smtp-server "smtp.gmail.com"
+   smtpmail-smtp-server "smtp.gmail.com"
+   smtpmail-smtp-service 587)
+
+;; alternatively, for emacs-24 you can use:
+;;(setq message-send-mail-function 'smtpmail-send-it
+;;     smtpmail-stream-type 'starttls
+;;     smtpmail-default-smtp-server "smtp.gmail.com"
+;;     smtpmail-smtp-server "smtp.gmail.com"
+;;     smtpmail-smtp-service 587)
+
+;; don't keep message buffers around
+(setq message-kill-buffer-on-exit t)
+
+
+;; BBDB
+(add-to-list 'load-path "~/.emacs.d/vendor/bbdb/lisp")
+(require 'bbdb-loaddefs)
+(bbdb-initialize 'gnus 'message)
+(bbdb-mua-auto-update-init 'gnus 'message)
+(setq bbdb-file "~/.emacs.d/.bbdb"
+      bbdb-mua-auto-update-p t
+      bbdb-mua-pop-up nil
+      bbdb-ignore-some-messages-alist '(("From" . "reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter\\|bounce")))
+
+;; (defun mjlm/bbdb-canonicalize-net-hook (addr)
+;;   "Do not notice no-reply and bounce senders."
+;;   (cond ((null addr) addr)
+;;         ((string-match "^\(no\)?-?reply" addr) nil)
+;;         ((string-match "bounce" addr) nil)
+;;         (t addr)))
+
+;; (setq bbdb-canonicalize-net-hook 'sacha/bbdb-canonicalize-net-hook)
+
+;; Alert notifications
+(add-to-list 'load-path "~/.emacs.d/vendor/alert")
+(require 'alert)
+(setq alert-default-style 'notifier)
+
+;; Track Gnus mail
+(add-to-list 'load-path "~/.emacs.d/vendor/gnus-desktop-notify.el")
+(require 'gnus-desktop-notify)
+
+(add-hook 'gnus-startup-hook
+          (lambda ()
+            (gnus-desktop-notify-mode)
+            (gnus-demon-add-handler 'gnus-demon-scan-news 2 t)
+	    (mailcap-add-mailcap-entry "application" "pdf" '((viewer "/usr/bin/qlmanage -p %s") (type . "application/pdf")))
+(mailcap-add-mailcap-entry "image" "jpeg" '((viewer "/usr/bin/qlmanage -p %s") (type . "image/*")))))
+
+(add-hook 'gnus-summary-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-k")  'gnus-summary-delete-article)))
+
+#+end_src

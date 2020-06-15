@@ -1,0 +1,6 @@
+#+TITLE: Workspace specific configurations
+#+AUTHOR: Martin Jesper Low Madsen
+
+#+BEGIN_SRC emacs-lisp
+  (setq user-mail-address "martin@martinjlowm.dk")
+#+END_SRC

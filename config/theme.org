@@ -1,0 +1,27 @@
+#+TITLE: Theme
+#+AUTHOR: Martin Jesper Low Madsen
+
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons
+    :ensure t)
+  (use-package eldoc-eval
+    :ensure t)
+  (use-package solaire-mode
+    :ensure t
+    :hook ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+    :config
+    (add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer)
+    (solaire-mode-swap-bg))
+  (use-package shrink-path
+    :ensure t)
+
+  (use-package doom-themes
+    :ensure t
+    :config
+    (load-theme 'doom-one t))
+
+  (use-package doom-modeline
+    :load-path "vendor/doom-modeline"
+    :after (:all eldoc-eval shrink-path solaire-mode projectile)
+    :hook (after-init . doom-modeline-init))
+#+END_SRC

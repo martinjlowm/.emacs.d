@@ -1,0 +1,22 @@
+#+TITLE: User- and shell-specific configurations
+#+AUTHOR: Martin Jesper Low Madsen
+
+#+begin_src emacs-lisp
+  (setq user-full-name "Martin Jesper Low Madsen")
+#+end_src
+
+Fetches shell environmental variables:
+
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/vendor/exec-path-from-shell")
+  (require 'exec-path-from-shell)
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize))
+  (exec-path-from-shell-copy-env "PERL5LIB")
+#+end_src
+
+
+# mu4e-compose-signature
+      # (concat
+      #   "Best Regards,\n"
+      #   "Martin Jesper Low Madsen\n")

@@ -1,0 +1,694 @@
+#+TITLE: Programming modes configurations
+#+AUTHOR: Martin Jesper Low Madsen
+
+* Tree sitter
+  #+BEGIN_SRC emacs-lisp
+    (add-to-list 'package-archives '("ublt" . "https://elpa.ubolonton.org/packages/"))
+    (use-package tree-sitter
+      :ensure t)
+    (use-package tree-sitter-langs
+      :ensure t)
+    (global-tree-sitter-mode)
+  #+END_SRC
+
+
+* Rust
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package rustic
+      :ensure t
+      :config
+      (setq rustic-rls-pkg 'lsp-mode))
+  #+END_SRC
+
+* PKGBUILD
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package pkgbuild-mode
+      :ensure t)
+  #+END_SRC
+
+* CMake
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package cmake-ide
+      :ensure t)
+    (use-package rtags
+      :ensure t)
+    (cmake-ide-setup)
+  #+END_SRC
+
+* C/C++
+
+  #+BEGIN_SRC emacs-lisp
+    (defun google-style-hook ()
+      (google-set-c-style))
+    (use-package google-c-style
+      :ensure t
+      :init
+      (add-hook 'c++-mode-hook 'google-style-hook)
+      (add-hook 'c-mode-hook 'google-style-hook)
+      (add-to-list 'auto-mode-alist '("\\.ino\\'" . c++-mode)))
+  #+END_SRC
+
+* Org
+
+  #+BEGIN_SRC emacs-lisp
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (local-unset-key (kbd "S-<up>"))
+                (local-unset-key (kbd "S-<down>"))
+                (local-unset-key (kbd "S-<left>"))
+                (local-unset-key (kbd "S-<right>"))
+                (rainbow-delimiters-mode)
+                (define-key org-mode-map
+                  (kbd "M-;") 'org-comment-dwim)
+                (add-to-list 'org-latex-classes '("dtu_report" "\\documentclass[12pt]{dtu_report}"
+                                                  ("\\section{%s}" . "\\section*{%s}")
+                                                  ("\\subsection{%s}" . "\\subsection*{%s}")
+                                                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                                                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                                                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+                (add-to-list 'org-latex-packages-alist '("" "shellesc" "minted"))
+                (setq org-latex-default-packages-alist '(("" "fontspec" t)
+                                                         ("" "amsmath" t)
+                                                         ("" "amssymb" t)
+                                                         ("" "shellesc" t)
+                                                         ("" "minted" t)
+                                                         ("" "hyperref" t)))))
+
+
+    ;; '(org-latex-default-packages-alist
+    ;;   (quote
+    ;;    (("AUTO" "inputen" t)
+    ;;     ("T1" "fontenc" t)
+    ;;     ("" "fixltx2e" nil)
+    ;;     ("" "graphicx" t)
+    ;;     ("" "longtable" nil)
+    ;;     ("" "float" nil)
+    ;;     ("" "wrapfig" nil)
+    ;;     ("" "rotating" nil)
+    ;;     ("normalem" "ulem" t)
+    ;;     ("" "amsmath" t)
+    ;;     ("" "textcomp" t)
+    ;;     ("" "marvosym" t)
+    ;;     ("" "wasysym" t)
+    ;;     ("" "amssymb" t)
+    ;;     ("" "hyperref" nil)
+    ;;     "\\tolerance=1000")))
+    (setq org-confirm-babel-evaluate nil)
+    (setq org-latex-listings 'minted)
+    (setq org-src-tab-acts-natively t)
+
+    (defun org-latex-link (link desc info)
+      "Transcode a LINK object from Org to LaTeX.
+
+            DESC is the description part of the link, or the empty string.
+            INFO is a plist holding contextual information.  See
+            `org-export-data'."
+      (let* ((type (org-element-property :type link))
+             (raw-path (replace-regexp-in-string
+                        "%" "\\%" (org-element-property :path link) nil t))
+             ;; Ensure DESC really exists, or set it to nil.
+             (desc (and (not (string= desc "")) desc))
+             (imagep (org-export-inline-image-p
+                      link org-latex-inline-image-rules))
+             (path (cond
+                    ((member type '("http" "https" "ftp" "mailto"))
+                     (concat type ":" raw-path))
+                    ((and (string= type "file") (file-name-absolute-p raw-path))
+                     (concat "file:" raw-path))
+                    (t raw-path)))
+             protocol)
+        (cond
+         ;; Image file.
+         (imagep (org-latex--inline-image link info))
+         ;; Radio link: Transcode target's contents and use them as link's
+         ;; description.
+         ((string= type "radio")
+          (let ((destination (org-export-resolve-radio-link link info)))
+            (if (not destination) desc
+              (format "\\hyperref[%s]{%s}"
+                      (org-export-solidify-link-text
+                       (org-element-property :value destination))
+                      desc))))
+         ;; Links pointing to a headline: Find destination and build
+         ;; appropriate referencing command.
+         ((member type '("custom-id" "fuzzy" "id"))
+          (let ((destination (if (string= type "fuzzy")
+                                 (org-export-resolve-fuzzy-link link info)
+                               (org-export-resolve-id-link link info))))
+            (case (org-element-type destination)
+              ;; Id link points to an external file.
+              (plain-text
+               (if desc (format "\\href{%s}{%s}" destination desc)
+                 (format "\\url{%s}" destination)))
+              ;; Fuzzy link points nowhere.
+              ('nil
+               (format org-latex-link-with-unknown-path-format
+                       (or desc
+                           (org-export-data
+                            (org-element-property :raw-link link) info))))
+              ;; LINK points to a headline.  If headlines are numbered
+              ;; and the link has no description, display headline's
+              ;; number.  Otherwise, display description or headline's
+              ;; title.
+              (headline
+               (let ((label
+                      (format "sec-%s"
+                              (mapconcat
+                               'number-to-string
+                               (org-export-get-headline-number destination info)
+                               "-"))))
+                 (if (and (not desc)
+                          (org-export-numbered-headline-p destination info))
+                     (format "\\cref{%s}" label)
+                   (format "\\hyperref[%s]{%s}" label
+                           (or desc
+                               (org-export-data
+                                (org-element-property :title destination) info))))))
+              ;; Fuzzy link points to a target.  Do as above.
+              (otherwise
+               (let ((path (org-export-solidify-link-text path)))
+                 (if (not desc) (format "\\cref{%s}" path)
+                   (format "\\hyperref[%s]{%s}" path desc)))))))
+         ;; Coderef: replace link with the reference name or the
+         ;; equivalent line number.
+         ((string= type "coderef")
+          (format (org-export-get-coderef-format path desc)
+                  (org-export-resolve-coderef path info)))
+         ;; Link type is handled by a special function.
+         ((functionp (setq protocol (nth 2 (assoc type org-link-protocols))))
+          (funcall protocol (org-link-unescape path) desc 'latex))
+         ;; External link with a description part.
+         ((and path desc) (format "\\href{%s}{%s}" path desc))
+         ;; External link without a description part.
+         (path (format "\\url{%s}" path))
+         ;; No path, only description.  Try to do something useful.
+         (t (format org-latex-link-with-unknown-path-format desc)))))
+
+    (use-package org-bullets
+      :ensure t
+      :commands (org-bullets-mode)
+      :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+    (defun org-comment-dwim (&optional arg)
+      (interactive "P")
+      (or (org-babel-do-key-sequence-in-edit-buffer (kbd "M-;"))
+          (comment-dwim arg)))
+
+    (defun task-sync ()
+      (interactive)
+      (shell-command-to-string "michel-orgmode --sync --orgfile ~/.emacs.d/tasks.org")
+      (revert-buffer t t))
+
+    (defun tasks ()
+      (interactive)
+      (find-file "~/.emacs.d/tasks.org"))
+    (setq org-src-fontify-natively t)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((python . t)
+       (C . t)
+       (calc . t)
+       (latex . t)
+       (java . t)
+       (ruby . t)
+       (lisp . t)
+       (scheme . t)
+       (js . t)))
+    (use-package grip-mode
+      :ensure t
+      :bind (:map markdown-mode-command-map
+                  ("g" . grip-mode)))
+
+    ;; Or using hooks
+    ;; (use-package grip-mode
+    ;;   :ensure t
+    ;;   :hook ((markdown-mode org-mode) . grip-mode))
+  #+END_SRC
+
+* TeX/LaTeX
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package latex-extra
+      :defer t
+      :ensure t)
+    (add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
+    (setq-default bibtex-dialect "biblatex")
+    (add-to-list 'load-path "~/.emacs.d/vendor/auctex-latexmk")
+    (add-hook 'LaTeX-mode-hook
+              (lambda ()
+                (require 'auctex-latexmk)
+                (auctex-latexmk-setup)
+                (setq TeX-command-default "LatexMk")
+                (setq TeX-clean-confirm nil)
+                (defun TeX-run-latexmk (name command file)
+                  (interactive)
+                  (let ((buf (current-buffer))
+                        ;; (TeX-process-asynchronous nil)
+                        (TeX-sentinel-default-function 'Latexmk-sentinel)
+                        (pair (assq buffer-file-coding-system auctex-latexmk-encoding-alist)))
+                    (unless (null pair)
+                      (setenv "LATEXENC" (cdr pair)))
+                    (TeX-run-TeX name command file)
+                    (setenv "LATEXENC" nil)
+                    (with-current-buffer buf
+                      (TeX-clean))))
+                (append LaTeX-clean-intermediate-suffixes
+                        '("\\.pyg"))))
+  #+END_SRC
+
+
+* Web Mode
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package web-mode
+      :ensure t
+      :config
+      (setq web-mode-code-indent-offset 2)
+      (setq web-mode-markup-indent-offset 2)
+      (setq web-mode-enable-css-colorization t))
+  #+END_SRC
+
+
+* TypeScript
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package typescript-mode
+      :ensure t
+      :mode (("\\.tsx?\\'" . typescript-mode))
+      :after lsp-mode
+      ;; :hook ((typescript-mode . setup-tide-mode))
+      :config
+      (put 'typescript-insert-and-indent 'delete-selection nil)
+      (put 'typescript-insert-and-autoconvert-to-template 'delete-selection nil)
+      (setq typescript-indent-level 2)
+      (add-hook 'typescript-mode #'subword-mode))
+    (use-package add-node-modules-path
+      :load-path "vendor/add-node-modules-path")
+    (defun setup-tide-mode ()
+      (interactive)
+      ;; (tide-setup)
+      ;; (flycheck-add-next-checker 'typescript-tide 'javascript-eslint)
+      ;; (flycheck-add-mode 'typescript-tide 'web-mode)
+      ;; (add-to-list 'interpreter-mode-alist '("ts-node" . typescript-mode))
+      (flycheck-mode +1)
+      (setq flycheck-check-syntax-automatically '(save mode-enabled))
+      (setq js2-strict-trailing-comma-warning nil)
+      (setq js2-global-externs '("require"
+                                 "__dirname"
+                                 "exports"
+                                 "module"
+                                 "process"
+                                 "global"))
+      (eldoc-mode +1)
+      ;; (tide-hl-identifier-mode +1)
+      ;; company is an optional dependency. You have to
+      ;; in s tall it s e paratel via package-install
+      ;; `M - x package - install[ret] company`
+      (company-mode +1)
+      ;; (add-node-modules-path)
+      ;; The following messes up optional chaining, duh
+      ;; (prettier-js-mode)
+      ;; (add-hook 'before-save-hook 'tide-format-before-save)
+      ;; (defun tide-command:openfile ()
+      ;;   (tide-send-command "open"
+      ;;                      (if tide-require-manual-setup
+      ;;                          `(:file
+      ;;                            ,(tide-buffer-file-name)
+      ;;                            :scriptKindName ,tide-default-mode
+      ;;                            :fileContent ,(buffer-string))
+      ;;                        (append `(:file ,(tide-buffer-file-name))
+      ;;                                (let ((extension (upcase (or (file-name-extension (tide-buffer-file-name)) "ts"))))
+      ;;                                  (when (member extension '("TS" "JS" "TSX" "JSX"))
+      ;;                                    `(:scriptKindName ,extension)))))))
+      )
+
+
+    ;; (use-package tide
+    ;;   :init
+    ;;   :ensure t
+    ;;   :after (typescript-mode company flycheck)
+    ;;   :hook (;; (typescript-mode . tide-setup)
+    ;;          ;; (typescript-mode . tide-hl-identifier-mode)
+    ;;          ;; (before-save . tide-format-before-save)
+    ;;          ))
+  #+END_SRC
+
+* JSON
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package json-mode
+      :ensure t
+      :mode (("\\.json\\'" . json-mode))
+      :config (setq js-indent-level 2))
+  #+END_SRC
+
+* Ruby
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ruby-mode
+      :ensure t
+      :defer t
+      :config
+      (setq ruby-align-chained-calls t))
+  #+END_SRC
+
+
+
+
+* RJSX
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package rjsx-mode
+      :ensure t
+      :defer t
+      :mode (("\\.jsx?\\'" . rjsx-mode))
+      :config
+      (setq js-indent-level 2))
+  #+END_SRC
+
+* Clojure
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package clojure-mode
+      :ensure t
+      :mode (("\\.cljs?\\'" . clojure-mode)))
+  #+END_SRC
+
+
+* Python
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package python-mode
+      :ensure t
+      :defer t)
+  #+END_SRC
+
+
+* Haskell
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package haskell-mode
+      :ensure t
+      :defer t)
+  #+END_SRC
+
+* F#
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package fsharp-mode
+      :ensure t
+      :defer t)
+  #+END_SRC
+
+* C#
+
+  #+BEGIN_SRC emacs-lisp
+    (defun setup-omnisharp-mode ()
+      (csharp-mode)
+      (flycheck-mode)
+      (add-to-list 'company-backends 'company-omnisharp)
+      (setq indent-tabs-mode nil)
+      (electric-pair-local-mode 1)
+      (local-set-key (kbd "C-c r r") 'omnisharp-run-code-action-refactoring))
+    (use-package omnisharp
+      :ensure t
+      :mode (("\\.cs\\'" . omnisharp-mode))
+      :hook ((omnisharp-mode . setup-omnisharp-mode)))
+  #+END_SRC
+
+* Gnuplot
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package gnuplot-mode
+      :ensure t
+      :defer t
+      :mode (("\\.gp\\'" . gnuplot-mode)))
+  #+END_SRC
+
+* Markdown
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package markdown-mode
+      :ensure t
+      :defer t
+      :mode (("\\.markdown\\'" . markdown-mode)
+             ("\\.md\\'" . markdown-mode)))
+  #+END_SRC
+
+* GraphQL
+
+  #+BEGIN_SRC emacs-lisp
+    (defun graphql-custom ()
+      (add-to-list 'graphql-keywords "union")
+      (setq graphql-definition-regex
+            (concat "\\(" (regexp-opt '("extend" "union" "type" "input" "interface" "fragment" "query"
+                                        "mutation" "subscription" "enum")) "\\)"
+                                        "[[:space:]]+\\(\\_<.+?\\_>\\)"))
+      (setq graphql-font-lock-keywords
+            `(
+              ;; Type definition
+              ("\\(type\\)[[:space:]]+\\(\\_<.+?\\_>\\)"
+               (1 font-lock-keyword-face)
+               (2 font-lock-function-name-face)
+               ("[[:space:]]+\\(implements\\)\\(?:[[:space:]]+\\(\\_<.+?\\_>\\)\\)?"
+                nil nil
+                (1 font-lock-keyword-face)
+                (2 font-lock-function-name-face)))
+
+              ;; Definitions
+              (,graphql-definition-regex
+               (1 font-lock-keyword-face)
+               (2 font-lock-function-name-face))
+
+              ;; Constants
+              (,(regexp-opt graphql-constants) . font-lock-constant-face)
+
+              ;; Variables
+              ("\\$\\_<.+?\\_>" . font-lock-variable-name-face)
+
+              ;; Types
+              (":[[:space:]]*\\[?\\(\\_<.+?\\_>\\)\\]?"
+               (1 font-lock-type-face))
+
+              ;; Directives
+              ("@\\_<.+?\\_>" . font-lock-keyword-face)
+
+              ;; Field parameters
+              (graphql--field-parameter-matcher
+               (1 font-lock-variable-name-face)))))
+    (use-package graphql-mode
+      :ensure t
+      :defer t
+      :mode (("\\.graphql\\'" . graphql-mode)
+             ("\\.gql\\'" . graphql-mode))
+      :hook ((graphql-mode . graphql-custom)))
+  #+END_SRC
+
+
+* SQL
+
+  #+BEGIN_SRC emacs-lisp
+    (defun sql-mode-set-product ()
+      (let ((file-name (buffer-file-name)))
+        (cond ((string-match "\\.\\(.+\\)$" file-name)
+               (let ((product (match-string 1 file-name)))
+                 (sql-set-product product))))))
+    (use-package sql-indent
+      :load-path "vendor/emacs-sql-indent"
+      :mode (("\\.\\(sql\\|mysql\\)\\'" . sql-mode))
+      :hook ((sql-mode . sql-mode-set-product)
+             (sql-mode . sqlind-minor-mode)))
+  #+END_SRC
+
+
+* Kotlin
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package kotlin-mode
+      :ensure t
+      :defer t
+      :config
+      (setq kotlin-tab-width 2)
+      (lsp-register-client
+       (make-lsp-client :new-connection (lsp-stdio-connection '("kotlin-language-server"))
+                        :major-modes '(kotlin-mode)
+                        :priority -1
+                        :server-id 'kotlin-ls)))
+  #+END_SRC
+
+
+# * Gradle
+
+#   #+BEGIN_SRC emacs-lisp
+#     (use-package groovy-mode
+#       :ensure t
+#       :defer t
+#       :config
+#       (setq c-basic-offset 4)
+#       :mode (("\\.gradle\\'" . groovy-mode)))
+#   #+END_SRC
+
+
+# * PO
+
+#   #+BEGIN_SRC emacs-lisp
+#     (use-package po-mode
+#       :ensure t
+#       :defer t)
+#   #+END_SRC
+
+
+# * CSV
+
+#   #+BEGIN_SRC emacs-lisp
+#     (use-package csv-mode
+#       :ensure t
+#       :defer t)
+#   #+END_SRC
+
+
+# * YAML
+
+#   #+BEGIN_SRC emacs-lisp
+#     (use-package yaml-mode
+#       :ensure t
+#       :defer t
+#       :mode (("\\.ya?ml\\'" . yaml-mode)))
+#   #+END_SRC
+
+* LSP
+
+  #+BEGIN_SRC emacs-lisp
+    ;; (setq lsp-print-io t)
+    (use-package lsp-mode
+      :defer t
+      :commands lsp
+      :custom
+      (lsp-auto-guess-root nil)
+      (lsp-prefer-flymake nil) ; Use flycheck instead of flymake
+      (lsp-file-watch-threshold 2000)
+      :bind (:map lsp-mode-map ("C-c C-f" . lsp-format-buffer))
+      :config
+      (require 'lsp-clients)
+      (setq lsp-eslint-server-command
+            '("node"
+              "/Users/martinjlowm/projects/vscode-eslint/server/out/eslintServer.js"
+              "--stdio"))
+      :hook ((java-mode python-mode go-mode kotlin-mode
+                        js-mode js2-mode typescript-mode web-mode
+                        c-mode c++-mode objc-mode dart-mode) . lsp))
+    (use-package lsp-ui
+      :after lsp-mode
+      :diminish
+      :commands lsp-ui-mode
+      :custom-face
+      (lsp-ui-doc-background ((t (:background nil))))
+      (lsp-ui-doc-header ((t (:inherit (font-lock-string-face italic)))))
+      :hook (lsp-mode . lsp-ui-mode)
+      :bind (:map lsp-ui-mode-map
+                  ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+                  ([remap xref-find-references] . lsp-ui-peek-find-references)
+                  ("C-c u" . lsp-ui-imenu))
+      :custom
+      (lsp-ui-doc-enable t)
+      (lsp-ui-doc-header t)
+      (lsp-ui-doc-include-signature t)
+      (lsp-ui-doc-position 'top)
+      (lsp-ui-doc-border (face-foreground 'default))
+      (lsp-ui-sideline-enable t)
+      (lsp-ui-sideline-show-code-actions t))
+
+    ;; (use-package company-lsp
+    ;;   :ensure t
+    ;;   :after lsp-mode
+    ;;   :hook (lsp-ui-mode . company-lsp)
+    ;;   :config
+    ;;   (setq company-lsp-enable-recompletion t)
+    ;;   (setq lsp-auto-configure t)
+    ;;   )
+
+    (use-package flycheck
+      :ensure t
+      :after lsp-mode
+      :commands flycheck
+      :hook (lsp-ui-mode . flycheck-mode)
+      :config
+      (add-to-list 'flycheck-checkers 'lsp-ui t)
+      (setq lsp-ui-flycheck-enable t))
+  #+END_SRC
+
+* Lua
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package company-lua
+      :ensure t
+      :after lua-mode
+      :config
+      )
+
+    (use-package lsp-lua-emmy
+      :demand
+      :ensure nil
+      :load-path "vendor/lsp-lua-emmy"
+      :hook (lua-mode . lsp)
+      :config
+      (setq lsp-lua-emmy-jar-path (expand-file-name "EmmyLua-LS-all.jar" user-emacs-directory))
+      )
+
+    (defun set-company-backends-for-lua()
+      "Set lua company backend."
+      (setq-local company-backends '(
+                                     (
+                                      company-lsp
+                                      company-lua
+                                      company-keywords
+                                      company-gtags
+                                      company-yasnippet
+                                      )
+                                     company-capf
+                                     company-dabbrev-code
+                                     company-files
+                                     )))
+
+    (use-package lua-mode
+      :ensure t
+      :mode "\\.lua$"
+      :interpreter "lua"
+      :hook (lua-mode . set-company-backends-for-lua)
+      :config
+      (setq lua-indent-level 4)
+      (setq lua-indent-string-contents t)
+      (setq lua-prefix-key nil)
+      )
+  #+END_SRC
+
+* Dockerfile
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package dockerfile-mode
+      :ensure t
+      :defer t
+      :mode (("\\Dockerfile\\'" . dockerfile-mode)))
+  #+END_SRC
+
+* Ledger
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ledger-mode
+      :ensure t
+      :defer t)
+  #+END_SRC
+
+* Dart
+  #+BEGIN_SRC emacs-lisp
+    (use-package dart-mode
+      :ensure t
+      :after lsp-mode
+      :config
+      (setq lsp-dart-sdk-dir "/usr/local/Cellar/flutter/stable/bin/cache/dart-sdk")
+      )
+
+  #+END_SRC

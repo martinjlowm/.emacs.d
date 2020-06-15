@@ -19,3 +19,6 @@ eshell/*
 ac-comphist.dat
 .mc-lists.el
 .tmp
+*~
+config/*.el
+config/*.md

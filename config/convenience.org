@@ -1,0 +1,425 @@
+#+TITLE: Configurations for convenience
+#+AUTHOR: Martin Jesper Low Madsen
+
+* Sane defaults
+
+#+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "C-z"))
+
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "S-C-<up>") 'shrink-window)
+(global-set-key (kbd "S-C-<down>") 'enlarge-window)
+
+(global-subword-mode)
+(setq column-number-mode 1)
+(setq ring-bell-function 'ignore)
+(setq-default fill-column 80)
+(setq redisplay-dont-pause t)
+(delete-selection-mode +1)
+
+(setq-default indent-tabs-mode nil)
+(show-paren-mode t)
+#+END_SRC
+
+Delete trailing whitespace on save:
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
+
+Backup:
+
+#+BEGIN_SRC emacs-lisp
+  (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
+        backup-by-copying t              ; Don't delink hardlinks
+        backup-by-copying-when-linked t
+        version-control t                ; Use version numbers on backups
+        delete-old-versions t            ; Automatically delete excess backups
+        kept-new-versions 20             ; how many of the newest versions to keep
+        kept-old-versions 5)
+#+END_SRC
+
+Store customizations in a separate file rather than init.el:
+
+#+BEGIN_SRC emacs-lisp
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (load custom-file)
+#+END_SRC
+
+Paired parentheses:
+
+#+BEGIN_SRC emacs-lisp
+  (electric-pair-mode 1)
+#+END_SRC
+
+* Calc inline
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package calc-inline
+      :load-path "vendor/calc-inline")
+  #+END_SRC
+
+
+* Projectile
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t)
+#+END_SRC
+
+* Ido
+
+  # #+BEGIN_SRC emacs-lisp
+  # (use-package ido
+  #   :init
+  #   (setq ido-enable-flex-matching t)
+  #   (setq ido-everywhere t)
+  #   (ido-mode t)
+  #   (use-package ido-vertical-mode
+  #     :ensure t
+  #     :defer t
+  #     :init (ido-vertical-mode 1)
+  #     (setq ido-vertical-define-keys 'C-n-and-C-p-only)))
+  # #+END_SRC
+
+* Expand region
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package expand-region
+      :ensure t
+      :bind ("C-=" . er/expand-region))
+  #+END_SRC
+
+
+* Smooth scrolling
+
+  #+BEGIN_SRC emacs-lisp
+  (use-package smooth-scrolling
+    :ensure t
+    :config
+    (setq auto-window-vscroll nil))
+  #+END_SRC
+
+* Bindings
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-M-<down>") 'transpose-paragraphs) ;; forward
+(global-set-key (kbd "C-M-<up>")
+                (lambda () (interactive "*")
+                  (transpose-paragraphs -1)))
+#+END_SRC
+
+Reopen file with superuser rights:
+
+#+BEGIN_SRC emacs-lisp
+  (defun sudo-edit (&optional arg)
+    "Edit currently visited file as root.
+
+     With a prefix ARG prompt for a file to visit.
+     Will also prompt for a file to visit if current
+     buffer is not visiting a file."
+    (interactive "P")
+    (if (or arg (not buffer-file-name))
+        (find-file (concat "/sudo:root@localhost:"
+                           (ido-read-file-name "Find file (as root): ")))
+      (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+  (global-set-key (kbd "C-x M-f") 'sudo-edit)
+#+END_SRC
+
+
+* Weechat
+
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package weechat
+  ;;   :ensure t)
+#+END_SRC
+
+
+* Delete on edit
+
+#+BEGIN_SRC emacs-lisp
+  (pending-delete-mode 1)
+#+END_SRC
+
+* Dired details
+
+#+BEGIN_SRC emacs-lisp
+  (use-package dired-details
+    :load-path "lisp"
+    :config
+    (setq dired-details-hidden-string "--- "))
+#+END_SRC
+
+* Whitespace
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package whitespace
+      :bind ("<f12>" . whitespace-mode))
+  #+END_SRC
+
+
+* Dash API lookup
+
+  #+BEGIN_SRC emacs-lisp
+  (use-package dash-at-point
+    :ensure t
+    :bind (("s-D"     . dash-at-point)
+           ("C-c e"   . dash-at-point-with-docset)))
+  #+END_SRC
+
+
+* Magit
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package magit
+      :ensure t
+      :defer t
+      :bind ("C-c g" . magit-status)
+      :config
+      (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
+      (setq vc-handled-backends nil))
+    (use-package magit-clone
+      :load-path "vendor/magit-clone"
+      :defer t)
+  #+END_SRC
+
+
+* Magit fullscreen
+
+  #+BEGIN_SRC emacs-lisp
+    (defadvice magit-status (around magit-fullscreen activate)
+      (window-configuration-to-register :magit-fullscreen)
+      ad-do-it
+      (delete-other-windows))
+
+    (defun magit-quit-session ()
+      "Restores the previous window configuration and kills the magit buffer"
+      (interactive)
+      (kill-buffer)
+      (jump-to-register :magit-fullscreen))
+  #+END_SRC
+
+* Docker
+
+#+BEGIN_SRC emacs-lisp
+  (use-package docker
+    :ensure t)
+#+END_SRC
+
+* Avy
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package avy
+      :ensure t
+      :diminish avy-mode
+      :bind
+      (
+       ("C-'" . avy-goto-char)
+       ("M-'" . avy-goto-line)
+       ))
+  #+END_SRC
+
+
+
+
+* Ivy, Swiper and Counsel
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package smex
+      :ensure t)
+  #+END_SRC
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ivy
+      :ensure t
+      :diminish ivy-mode
+      :requires smex
+      :config
+      (ivy-mode 1)
+      ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
+      (setq ivy-use-virtual-buffers t)
+      ;; number of result lines to display
+      (setq ivy-height 10)
+      ;; does not count candidates
+      (setq ivy-count-format "")
+      ;; no regexp by default
+      (setq ivy-initial-inputs-alist nil)
+      ;; configure regexp engine.
+      (setq ivy-re-builders-alist
+            ;; allow input not in order
+            '((t . ivy--regex-ignore-order)))
+      :bind
+      (
+       ("C-'" . ivy-avy)
+       (:map ivy-minibuffer-map
+        ("C-s" . ivy-next-line)
+        ("C-r" . ivy-previous-line))
+       ("C-h a" . helm-apropos)
+       ;; ("" . counsel-grep-or-swiper)
+       ("C-x b" . ivy-switch-buffer)
+       ))
+    (use-package swiper
+      :ensure t
+      :bind
+      (("C-s" . swiper)))
+    (use-package counsel
+      :ensure t
+      :after smex
+      :bind (("C-h b" . counsel-descbinds)
+             ("C-x C-f" . counsel-find-file)
+             ("M-x" . counsel-M-x)
+             ("M-y" . counsel-yank-pop))
+      :config
+      (setq counsel-find-file-ignore-regexp "\(?:\‘[#.]\)\|\(?:[#~]\’\)"))
+    (use-package counsel-dash
+      :ensure t)
+  #+END_SRC
+
+* Rainbow
+
+  Color names:
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package rainbow-mode
+      :ensure t)
+  #+END_SRC
+
+  Parentheses:
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package rainbow-delimiters
+      :ensure t)
+  #+END_SRC
+
+* Electric align
+
+#+BEGIN_SRC emacs-lisp
+  (use-package electric-align
+    :load-path "vendor/electric-align")
+#+END_SRC
+
+
+* Aggressive indentation
+
+#+BEGIN_SRC emacs-lisp
+  (use-package aggressive-indent
+    :ensure t)
+#+END_SRC
+
+
+* Workspaces
+
+#+BEGIN_SRC emacs-lisp
+  (use-package perspective
+    :ensure t
+    :defer t
+    :config (persp-mode))
+#+END_SRC
+
+* Winner
+
+#+BEGIN_SRC emacs-lisp
+  (use-package winner
+    :ensure t
+    :config
+    (winner-mode t)
+    :bind (("S-<left>" . windmove-left)
+           ("S-<right>" . windmove-right)
+           ("S-<up>" . windmove-up)
+           ("S-<down>" . windmove-down)))
+#+END_SRC
+
+
+* Company
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :ensure t
+    :defer t
+    :init (setq
+           company-tooltip-align-annotations t
+           company-tooltip-minimum-width 30)
+    :config (global-company-mode)
+    :bind ("M-<tab>" . company-complete))
+#+END_SRC
+
+
+* Multiple cursors
+
+#+BEGIN_SRC emacs-lisp
+  (use-package multiple-cursors
+    :ensure t
+    :bind (("C-x M-c" . mc/edit-lines)
+           ("C->"         . mc/mark-next-like-this)
+           ("C-<"         . mc/mark-previous-like-this)
+           ("C-c C-<"     . mc/mark-all-like-this)
+           ("C-!"         . mc/mark-next-symbol-like-this)
+           ("s-d"         . mc/mark-all-dwim)))
+#+END_SRC
+
+
+* Sprunge.us pastebin
+
+#+begin_src emacs-lisp
+  (setq sprunge-major-modes (make-hash-table :test 'equal))
+  (puthash 'emacs-lisp-mode "scm" sprunge-major-modes)
+  (puthash 'js2-mode "javascript" sprunge-major-modes)
+  (puthash 'latex-mode "latex" sprunge-major-modes)
+  (puthash 'malabar-mode "java" sprunge-major-modes)
+  (puthash 'lua-mode "lua" sprunge-major-modes)
+  (puthash 'haskell-mode "haskell" sprunge-major-modes)
+  (puthash 'javascript-mode "javascript" sprunge-major-modes)
+  (puthash 'ruby-mode "ruby" sprunge-major-modes)
+  (puthash 'sage-mode "python" sprunge-major-modes)
+  ;; Does not work with shell commented characters
+  (defun sprunge ()
+    "Sprungify current selected region"
+    (interactive)
+    (if mark-active
+        (let ((selection (buffer-substring-no-properties (region-beginning) (region-end)))
+              (cur-buffer (current-buffer)))
+          (unless (= (length selection) 0)
+            (progn
+              (let ((sprunge-link (concat (substring (shell-command-to-string
+                                                      (concat
+                                                       "curl -s -F 'sprunge=<-' http://sprunge.us <<EOF\n"
+                                                       selection
+                                                       "\nEOF")) 0 -1)
+                                          "?"
+                                          (gethash
+                                           (with-current-buffer cur-buffer
+                                             major-mode) sprunge-major-modes "None"))))
+                (kill-new sprunge-link)
+                (message "Sprunge complete: %s" sprunge-link)))))))
+#+end_src
+
+* REST client
+
+#+BEGIN_SRC emacs-lisp
+  (use-package restclient
+    :ensure t
+    :defer t)
+#+END_SRC
+
+* Emacs DBI
+
+#+BEGIN_SRC emacs-lisp
+  (use-package edbi
+    :ensure t
+    :defer t)
+#+END_SRC
+
+* Language server
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package lsp-mode
+      :ensure t)
+  #+END_SRC
